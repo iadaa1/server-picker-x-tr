@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 namespace ServerPickerX.Models
 {
     // ObservableObject base class requries a partial class to  
-    // generate boiler plate code in another file with same class name
+    // generate boiler plate code for common MVVM implementations
     public partial class ServerModel: ObservableObject
     {
         public string Flag { get; set; } = "";
