@@ -45,7 +45,7 @@
             </Grid.RowDefinitions>
 
             <!-- Title Bar -->
-            <Grid Grid.Row="0" Background="#373B78" PointerPressed="Window_PointerPressed">
+            <Grid Grid.Row="0" x:Name="TitleBar" Background="#373B78" PointerPressed="TitleBar_PointerPressed">
                 <ProgressBar 
                     Margin="0,-24,0,0" 
                     Height="4"
@@ -71,6 +71,7 @@
                 </StackPanel>
             </Grid>
 
+            <!-- Main Content -->
             <Grid Grid.Row="1">
 				<Grid.RowDefinitions>
                     <!-- Top Buttons -->

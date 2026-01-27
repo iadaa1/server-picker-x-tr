@@ -29,7 +29,7 @@ namespace ServerPickerX.Views
             await ((MainWindowViewModel)DataContext).PingServers();
         }
 
-        private void Window_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+        private void TitleBar_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
         {
             // prevent other mouse event listeners from being triggered
             e.Handled = true;

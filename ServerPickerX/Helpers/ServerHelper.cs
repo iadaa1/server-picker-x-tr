@@ -22,10 +22,10 @@ namespace ServerPickerX.Helpers
 
                 try
                 {
-                    process.StartInfo.Arguments = $"/c {Path.Combine(Environment.SystemDirectory, "netsh.exe")} " + 
-                            "advfirewall firewall " + 
+                    process.StartInfo.Arguments = $"/c {Path.Combine(Environment.SystemDirectory, "netsh.exe")} " +
+                            "advfirewall firewall " +
                             (shouldBlock ? "add" : "delete") + " rule " +
-                            "name=server_picker_x_" + serverModel.Description.Replace(" ", "") + 
+                            "name=server_picker_x_" + serverModel.Description.Replace(" ", "") +
                             (shouldBlock ? " dir=out action=block protocol=ANY " + "remoteip=" + ipAddresses : "");
 
                     process.Start();
@@ -33,7 +33,7 @@ namespace ServerPickerX.Helpers
 
                     if (process.ExitCode == 1 || process.ExitCode < 0)
                     {
-                        throw new Exception("StdOut: " + process.StandardOutput.ReadToEnd() + Environment.NewLine 
+                        throw new Exception("StdOut: " + process.StandardOutput.ReadToEnd() + Environment.NewLine
                             + "StdErr: " + process.StandardError.ReadToEnd());
                     }
 
@@ -41,23 +41,12 @@ namespace ServerPickerX.Helpers
                 }
                 catch (Exception ex)
                 {
-                    if(ex.Message.Contains("No rules match the specified criteria"))
+                    if (ex.Message.Contains("No rules match the specified criteria"))
                     {
                         continue;
                     }
 
-                    LogHelper.LogErrorToFile(
-                        ex.Message, 
-                        "An error has occured while" + (shouldBlock ? "blocking" : "unblocking") + " servers."
-                    );
-
-                    await MessageBoxHelper.ShowMessageBox(
-                        "Error",
-                        "An error has occured while" + (shouldBlock ? "blocking" : "unblocking") +  " servers." + 
-                        Environment.NewLine + 
-                        "Please upload the generated error file on github issue tracker.",
-                        ButtonEnum.Ok
-                    );
+                    await handleOperationError(ex, shouldBlock);
                 }
             }
 
@@ -91,24 +80,28 @@ namespace ServerPickerX.Helpers
                 }
                 catch (Exception ex)
                 {
-                    LogHelper.LogErrorToFile(
-                        ex.Message,
-                        "An error has occured while" + (shouldBlock ? "blocking" : "unblocking") + " servers."
-                    );
-
-                    await MessageBoxHelper.ShowMessageBox(
-                        "Error",
-                        "An error has occured while" + (shouldBlock ? "blocking" : "unblocking") + " servers." +
-                        Environment.NewLine +
-                        "Please upload the generated error file on github issue tracker.",
-                        ButtonEnum.Ok
-                    );
+                    await handleOperationError(ex, shouldBlock);
                 }
             }
 
             process.Dispose();
         }
 
+        public static async Task handleOperationError(Exception ex, bool shouldBlock)
+        {
+            LogHelper.LogErrorToFile(
+                        ex.Message,
+                        "An error has occured while" + (shouldBlock ? "blocking" : "unblocking") + " servers."
+                    );
+
+            await MessageBoxHelper.ShowMessageBox(
+                "Error",
+                "An error has occured while" + (shouldBlock ? "blocking" : "unblocking") + " servers." +
+                Environment.NewLine +
+                "Please upload the generated error file on github issue tracker.",
+                ButtonEnum.Ok
+            );
+        }
 
     }
 }

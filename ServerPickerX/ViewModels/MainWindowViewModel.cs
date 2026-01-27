@@ -1,10 +1,5 @@
-﻿using Avalonia.Controls;
-using Avalonia.Media;
-using Avalonia.Media.Imaging;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
 using ServerPickerX.Helpers;
 using ServerPickerX.Models;
 using System;
@@ -12,7 +7,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.NetworkInformation;
@@ -47,8 +41,8 @@ namespace ServerPickerX.ViewModels
                 await MessageBoxHelper.ShowMessageBox(
                     "Error", 
                     "Failed to load servers..." + Environment.NewLine + Environment.NewLine +
-                    "- Verify your internet connection or firewall" + Environment.NewLine +
-                    "- Make sure to run the app as admin or with sudo perms");
+                    "- Verify your internet connection or firewall are working and enabled" + Environment.NewLine +
+                    "- Make sure to run the app as admin or with sudo level execution");
                 return this;
             }
 
@@ -136,7 +130,7 @@ namespace ServerPickerX.ViewModels
 
             if (PendingOperation)
             {
-                await MessageBoxHelper.ShowMessageBox("Info", "Pending block all operation. Please wait...");
+                await MessageBoxHelper.ShowMessageBox("Info", "Pending block operation. Please wait...");
                 return;
             }
 
@@ -164,7 +158,7 @@ namespace ServerPickerX.ViewModels
         {
             if (PendingOperation)
             {
-                await MessageBoxHelper.ShowMessageBox("Info", "Pending block selected operation. Please wait...");
+                await MessageBoxHelper.ShowMessageBox("Info", "Pending block operation. Please wait...");
                 return;
             }
 
@@ -205,7 +199,7 @@ namespace ServerPickerX.ViewModels
 
             if (PendingOperation)
             {
-                await MessageBoxHelper.ShowMessageBox("Info", "Pending unblock all operation. Please wait...");
+                await MessageBoxHelper.ShowMessageBox("Info", "Pending unblock operation. Please wait...");
                 return;
             }
 
@@ -233,7 +227,7 @@ namespace ServerPickerX.ViewModels
         {
             if (PendingOperation)
             {
-                await MessageBoxHelper.ShowMessageBox("Info", "Pending unblock selected operation. Please wait...");
+                await MessageBoxHelper.ShowMessageBox("Info", "Pending unblock operation. Please wait...");
                 return;
             }
 
