@@ -20,16 +20,16 @@ A cross platform CS2 and Deadlock server picker built with AvaloniaUI
 - Main Functionality
   - [ ] Block Selected (RelayCommand)
     - [x] Windows 
-    - [ ] Linux
+    - [x] Linux
   - [ ] Block All (RelayCommand)
     - [x] Windows 
-    - [ ] Linux
+    - [x] Linux
   - [ ] Unblock Selected (RelayCommand)
     - [x] Windows 
-    - [ ] Linux
+    - [x] Linux
   - [ ] Unblock All (RelayCommand)
     - [x] Windows 
-    - [ ] Linux
+    - [x] Linux
 - [ ] Clusters
   - [ ] Create ClusterModel (server model collection property)
 - [ ] Update Checker
