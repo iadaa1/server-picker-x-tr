@@ -33,56 +33,7 @@ namespace ServerPickerX.ViewModels
 
         public async Task<MainWindowViewModel> LoadServersAsync()
         {
-            using HttpClient httpClient = new HttpClient();
-
-            string res = await httpClient.GetStringAsync("https://api.steampowered.com/ISteamApps/GetSDRConfig/v1/?appid=730");
-
-            if (string.IsNullOrWhiteSpace(res))
-            {
-                await MessageBoxHelper.ShowMessageBox(
-                    "Error", 
-                    "Failed to load servers..." + Environment.NewLine + Environment.NewLine +
-                    "- Verify your internet connection or firewall are working and enabled" + Environment.NewLine +
-                    "- Make sure to run the app as admin or with sudo level execution");
-                return this;
-            }
-
-            JsonObject? mainJson = JsonObject.Parse(res) as JsonObject;
-
-            if (mainJson?["revision"] == null)
-            {
-                return this;
-            }
-
-            Debug.WriteLine("Server Revision: " + mainJson["revision"]);
-
-            ObservableCollection<ServerModel> serverModels = [];
-
-            foreach (var server in mainJson["pops"] as JsonObject)
-            {
-                if (server.Value?["relays"] == null)
-                    continue;
-
-                var serverModel = new ServerModel
-                {
-                    Flag = "/Assets/flags/"
-                        + server.Value["desc"]?.ToString() + $" ({server.Key}).png",
-                    Name = server.Key,
-                    Description = server.Value["desc"]?.ToString()
-                };
-
-                foreach (JsonObject relay in server.Value["relays"] as JsonArray)
-                {
-                    serverModel.RelayModels.Add(new RelayModel
-                    {
-                        IPv4 = relay["ipv4"]?.ToString()
-                    });
-                }
-
-                serverModels.Add(serverModel);
-            }
-
-            ServerModels = serverModels;
+            ServerModels = await ServerHelper.LoadServers();
 
             return this;
         }
