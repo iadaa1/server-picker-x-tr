@@ -9,9 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http;
 using System.Net.NetworkInformation;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace ServerPickerX.ViewModels

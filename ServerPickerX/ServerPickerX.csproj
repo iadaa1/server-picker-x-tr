@@ -2,7 +2,6 @@
   <PropertyGroup>
     <SelfContained>true</SelfContained> <!-- Ensures all required .NET files are bundled -->
     <PublishSingleFile>true</PublishSingleFile> <!-- Bundles everything into a single executable file -->
-    <PublishTrimmed>true</PublishTrimmed> <!-- Trim unused framework libraries -->
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>

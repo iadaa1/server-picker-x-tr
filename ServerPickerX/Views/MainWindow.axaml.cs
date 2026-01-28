@@ -1,14 +1,9 @@
-using Avalonia.Collections;
 using Avalonia.Controls;
-using HarfBuzzSharp;
 using ServerPickerX.Comparer;
-using ServerPickerX.Models;
+using ServerPickerX.ConfigSections;
+using ServerPickerX.Helpers;
 using ServerPickerX.ViewModels;
-using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
 
 namespace ServerPickerX.Views
 {
@@ -17,6 +12,9 @@ namespace ServerPickerX.Views
 
         private ListSortDirection pingSortDirection = ListSortDirection.Ascending;
 
+        // initialize a static singleton object for handling json settings
+        public static JsonSetting jsonSettings = new();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -24,9 +22,20 @@ namespace ServerPickerX.Views
 
         private async void Window_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            DataContext = await new MainWindowViewModel().LoadServersAsync();
+            await jsonSettings.LoadSettings();
 
-            await ((MainWindowViewModel)DataContext).PingServers();
+            MainWindowViewModel viewModel = new MainWindowViewModel();
+
+            DataContext = await viewModel.LoadServersAsync();
+
+            // unblock all server to sync new data if steam sdr api has been updated
+            if (jsonSettings.server_revision != ServerHelper.current_server_revision)
+            {
+                await viewModel.UnblockAll();
+            } else
+            {
+                await viewModel.PingServers();
+            }
         }
 
         private void TitleBar_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)

@@ -1,5 +1,7 @@
 ﻿using MsBox.Avalonia.Enums;
+using ServerPickerX.ConfigSections;
 using ServerPickerX.Models;
+using ServerPickerX.Views;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -14,6 +16,8 @@ namespace ServerPickerX.Helpers
 {
     public class ServerHelper
     {
+        public static string current_server_revision = string.Empty;
+
         public async static Task<ObservableCollection<ServerModel>> LoadServers()
         {
             ObservableCollection<ServerModel> serverModels = [];
@@ -27,7 +31,7 @@ namespace ServerPickerX.Helpers
                 if (string.IsNullOrWhiteSpace(res))
                 {
                     throw new Exception(
-                        "Failed to load servers..." + Environment.NewLine + Environment.NewLine +
+                        "Failed to load servers!" + Environment.NewLine + Environment.NewLine +
                         "- Verify your internet connection or firewall are working and enabled" + Environment.NewLine +
                         "- Make sure to run the app as admin or with sudo level execution"
                     );
@@ -37,16 +41,25 @@ namespace ServerPickerX.Helpers
 
                 if (mainJson?["revision"] == null || mainJson?["pops"] == null)
                 {
-                    throw new Exception("Server data not available yet. Please check again later.");
+                    throw new Exception("Server data unavailable. Please try again later.");
                 }
 
-                Debug.WriteLine("Server Revision: " + mainJson["revision"]);
+                current_server_revision = mainJson["revision"].ToString();
+                
+                // update json setting server revision value if initialized for the first time
+                JsonSetting jsonSettings = MainWindow.jsonSettings;
+                if (jsonSettings.server_revision == "-1")
+                {
+                    jsonSettings.server_revision = current_server_revision;
+
+                    await jsonSettings.SaveSettings();
+                }
 
                 foreach (var server in mainJson["pops"] as JsonObject)
                 {
-                    if (server.Value?["relays"] == null || server.Value?["desc"] == null)
+                    if (server.Value?["relays"] == null)
                     {
-                        throw new Exception($"Invalid server data for {server.Key}. API data structure error.");
+                        continue;
                     }
 
                     var serverModel = new ServerModel
