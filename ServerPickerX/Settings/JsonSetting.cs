@@ -30,6 +30,7 @@ namespace ServerPickerX.ConfigSections
             // that pre-determines static types of the app during compilation
             try
             {
+                // create local json settings if not exist with serialized object properties
                 if (!File.Exists(jsonFileName))
                 {
                     FileStream file = File.Create(jsonFileName);
@@ -63,7 +64,8 @@ namespace ServerPickerX.ConfigSections
         {
             try
             {
-                FileStream file = File.OpenWrite(jsonFileName);
+                // open existing local json settings and deserialize it back to its complex form
+                FileStream file = File.OpenRead(jsonFileName);
 
                 await JsonSerializer.SerializeAsync(file, this, serializerOptions);
 
