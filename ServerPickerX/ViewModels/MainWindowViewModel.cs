@@ -126,7 +126,7 @@ namespace ServerPickerX.ViewModels
         {
             if (PendingOperation)
             {
-                await MessageBoxHelper.ShowMessageBox("Info", "Pending operation. Please wait...");
+                await MessageBoxHelper.ShowMessageBox("Info", "Pending operation. Please wait...", Icon.Setting);
                 return;
             }
 
@@ -150,8 +150,7 @@ namespace ServerPickerX.ViewModels
             {
                 await MessageBoxHelper.ShowMessageBox(
                         "Error",
-                        "An error has occured! Please upload generated error file to github.",
-                        ButtonEnum.Ok
+                        "An error has occured! Please upload generated error file to github."
                     );
 
                 await LogHelper.LogErrorToFile(ex.Message, "An error has occured while blocking or unblocking servers.");

@@ -4,16 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ServerPickerX.Converters"
+        xmlns:userControls="using:ServerPickerX"
         mc:Ignorable="d" 
         d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ServerPickerX.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
         Width="850"
         MinWidth="850"
         MaxWidth="1280"
         Height="600"
         MinHeight="500"
         MaxHeight="960"
-        x:Class="ServerPickerX.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="ServerPickerX"
         SystemDecorations="BorderOnly"
@@ -51,24 +52,7 @@
                     Height="4"
                     IsIndeterminate="True"
                     IsVisible="{Binding ShowProgressBar, Mode=TwoWay}"/>
-                <StackPanel
-                        Grid.Row="0"
-                        HorizontalAlignment="Right"
-                        Orientation="Horizontal">
-                    <Button
-                            Name="MinimizeBtn"
-                            Classes="titlebar-btn minimize-btn"
-                            Width="32"
-                            Height="32"
-                            BorderThickness="0"
-                            Click="MinimizeBtn_Click" />
-                    <Button
-                            Name="CloseBtn"
-                            Classes="titlebar-btn close-btn"
-                            Width="32"
-                            Height="32"
-                            Click="CloseBtn_Click" />
-                </StackPanel>
+                <userControls:TitleBarButtons/>
             </Grid>
 
             <!-- Main Content -->

@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ServerPickerX.TitleBarButtons">
+    <StackPanel
+        HorizontalAlignment="Right"
+        Orientation="Horizontal">
+        <Button
+            Name="MinimizeBtn"
+            Classes="titlebar-btn minimize-btn"
+            Width="32"
+            Height="32"
+            BorderThickness="0"
+            Click="MinimizeBtn_Click" />
+        <Button
+            Name="CloseBtn"
+            Classes="titlebar-btn close-btn"
+            Width="32"
+            Height="32"
+            Click="CloseBtn_Click" />
+    </StackPanel>
+</UserControl>

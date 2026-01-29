@@ -1,8 +1,8 @@
-﻿using MsBox.Avalonia.Enums;
-using ServerPickerX.ConfigSections;
+﻿using ServerPickerX.ConfigSections;
 using ServerPickerX.Models;
 using ServerPickerX.Views;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -48,6 +48,7 @@ namespace ServerPickerX.Helpers
                 
                 // update json setting server revision value if initialized for the first time
                 JsonSetting jsonSettings = MainWindow.jsonSettings;
+
                 if (jsonSettings.server_revision == "-1")
                 {
                     jsonSettings.server_revision = current_server_revision;
@@ -55,7 +56,7 @@ namespace ServerPickerX.Helpers
                     await jsonSettings.SaveSettings();
                 }
 
-                foreach (var server in mainJson["pops"] as JsonObject)
+                foreach (KeyValuePair<string, JsonNode> server in mainJson["pops"] as JsonObject)
                 {
                     if (server.Value?["relays"] == null)
                     {

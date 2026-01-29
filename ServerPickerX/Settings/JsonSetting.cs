@@ -33,23 +33,19 @@ namespace ServerPickerX.ConfigSections
                 // create local json settings if not exist with serialized object properties
                 if (!File.Exists(jsonFileName))
                 {
-                    FileStream file = File.Create(jsonFileName);
+                    using FileStream newSettingsFile = File.Create(jsonFileName);
 
-                    await JsonSerializer.SerializeAsync(file, this, serializerOptions);
-
-                    file.Close();
+                    await JsonSerializer.SerializeAsync(newSettingsFile, this, serializerOptions);
 
                     return this;
                 }
 
-                FileStream settingsFile = File.OpenRead(jsonFileName);
+                using FileStream settingsFile = File.OpenRead(jsonFileName);
 
                 JsonSetting localSettings = await JsonSerializer.DeserializeAsync<JsonSetting>(settingsFile) ?? this;
 
                 server_revision = localSettings.server_revision;
                 version_check_on_startup = localSettings.version_check_on_startup;
-
-                settingsFile.Close();
             }
             catch (Exception ex) {
                 await MessageBoxHelper.ShowMessageBox("Error", "An error has occured while loading json settings");
@@ -65,11 +61,9 @@ namespace ServerPickerX.ConfigSections
             try
             {
                 // open existing local json settings and deserialize it back to its complex form
-                FileStream file = File.OpenRead(jsonFileName);
+                using FileStream file = File.OpenWrite(jsonFileName);
 
                 await JsonSerializer.SerializeAsync(file, this, serializerOptions);
-
-                file.Close();
 
                 return true;
             }
