@@ -17,7 +17,7 @@ namespace ServerPickerX.ConfigSections
         public bool version_check_on_startup { get; set; } = true;
 
         [JsonIgnore]
-        public readonly string jsonFileName = "settings.json";
+        public readonly string jsonFilePath = "./settings.json";
 
         [JsonIgnore]
         private readonly JsonSerializerOptions serializerOptions = new(){ WriteIndented = true };
@@ -31,16 +31,16 @@ namespace ServerPickerX.ConfigSections
             try
             {
                 // create local json settings if not exist with serialized object properties
-                if (!File.Exists(jsonFileName))
+                if (!File.Exists(jsonFilePath))
                 {
-                    using FileStream newSettingsFile = File.Create(jsonFileName);
+                    using FileStream newSettingsFile = File.Create(jsonFilePath);
 
                     await JsonSerializer.SerializeAsync(newSettingsFile, this, serializerOptions);
 
                     return this;
                 }
 
-                using FileStream settingsFile = File.OpenRead(jsonFileName);
+                using FileStream settingsFile = File.OpenRead(jsonFilePath);
 
                 JsonSetting localSettings = await JsonSerializer.DeserializeAsync<JsonSetting>(settingsFile) ?? this;
 
@@ -61,7 +61,7 @@ namespace ServerPickerX.ConfigSections
             try
             {
                 // open existing local json settings and deserialize it back to its complex form
-                using FileStream file = File.OpenWrite(jsonFileName);
+                using FileStream file = File.OpenWrite(jsonFilePath);
 
                 await JsonSerializer.SerializeAsync(file, this, serializerOptions);
 

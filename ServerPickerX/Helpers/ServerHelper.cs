@@ -22,13 +22,13 @@ namespace ServerPickerX.Helpers
         {
             ObservableCollection<ServerModel> serverModels = [];
 
-            HttpClient httpClient = new();
+            using HttpClient httpClient = new();
 
             try
             {
-                string res = await httpClient.GetStringAsync("https://api.steampowered.com/ISteamApps/GetSDRConfig/v1/?appid=730");
+                Stream res = await httpClient.GetStreamAsync("https://api.steampowered.com/ISteamApps/GetSDRConfig/v1/?appid=730");
 
-                if (string.IsNullOrWhiteSpace(res))
+                if (res == null)
                 {
                     throw new Exception(
                         "Failed to load servers!" + Environment.NewLine + Environment.NewLine +
@@ -37,11 +37,11 @@ namespace ServerPickerX.Helpers
                     );
                 }
 
-                JsonObject? mainJson = JsonObject.Parse(res) as JsonObject;
+                JsonObject? mainJson = await JsonObject.ParseAsync(res) as JsonObject;
 
                 if (mainJson?["revision"] == null || mainJson?["pops"] == null)
                 {
-                    throw new Exception("Server data unavailable. Please try again later.");
+                    throw new Exception("Server relay data unavailable. Please try again later.");
                 }
 
                 current_server_revision = mainJson["revision"].ToString();
@@ -81,14 +81,12 @@ namespace ServerPickerX.Helpers
 
                     serverModels.Add(serverModel);
                 }
-
-                return serverModels;
             }
             catch (Exception ex) {
                 await MessageBoxHelper.ShowMessageBox("Error", ex.Message);
-
-                return serverModels;
             }
+
+            return serverModels;
         }
 
         public static async Task BlockUnblockServersWindows(bool shouldBlock, ObservableCollection<ServerModel> serverModels)
@@ -111,6 +109,7 @@ namespace ServerPickerX.Helpers
                 string stdOut = process.StandardOutput.ReadToEnd();
                 string stdErr = process.StandardError.ReadToEnd();
 
+                // skip throwing an exception if user tries to unblock a non-blocked server
                 if ((process.ExitCode == 1 || process.ExitCode < 0) &&
                     !$"{stdOut} {stdErr}".Contains("No rules match"))
                 {

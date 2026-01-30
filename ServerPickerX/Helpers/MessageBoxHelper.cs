@@ -56,19 +56,7 @@ namespace ServerPickerX.Helpers
                 return;
             }
 
-            if (OperatingSystem.IsWindows())
-            {
-                using var proc = new Process { StartInfo = { UseShellExecute = true, FileName = url } };
-                proc.Start();
-            }
-            else if (OperatingSystem.IsLinux())
-            {
-                Process.Start("x-www-browser", url);
-            }
-            else
-            {
-                Process.Start("open", url);
-            }
+            ProcessHelper.createProcessFromUrl(url);
         }
     }
 }

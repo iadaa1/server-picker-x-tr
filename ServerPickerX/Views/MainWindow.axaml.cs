@@ -1,5 +1,5 @@
 using Avalonia.Controls;
-using ServerPickerX.Comparer;
+using ServerPickerX.Comparers;
 using ServerPickerX.ConfigSections;
 using ServerPickerX.Helpers;
 using ServerPickerX.ViewModels;
@@ -47,6 +47,8 @@ namespace ServerPickerX.Views
             {
                 await viewModel.PingServers();
             }
+
+            await VersionHelper.CheckVersion();
         }
 
         private void TitleBar_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)

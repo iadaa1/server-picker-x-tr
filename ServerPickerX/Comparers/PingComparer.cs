@@ -4,7 +4,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 
-namespace ServerPickerX.Comparer
+namespace ServerPickerX.Comparers
 {
     public class PingComparer : IComparer
     {
