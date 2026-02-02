@@ -5,6 +5,16 @@
              xmlns:i="https://github.com/projektanker/icons.avalonia"
              mc:Ignorable="d"
              x:Class="ServerPickerX.FooterButtons">
+    <UserControl.Styles>
+		<Style Selector="Button">
+			 <Setter Property="Background">
+                <Setter.Value>
+				    <SolidColorBrush Color="White" Opacity="0.25" />
+                </Setter.Value>
+            </Setter> 
+        </Style>
+    </UserControl.Styles>
+
     <StackPanel
         VerticalAlignment="Center"
         HorizontalAlignment="Right"
