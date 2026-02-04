@@ -16,22 +16,20 @@ namespace ServerPickerX.Helpers
                 return;
             }
 
-            ServerModel serverModel = server;
-
             using Ping ping = new();
 
-            foreach (RelayModel relay in serverModel.RelayModels)
+            foreach (RelayModel relay in server.RelayModels)
             {
-                serverModel.Ping = "Pinging server";
+                server.Ping = "Pinging server";
 
                 try
                 {
-                    var res = await ping.SendPingAsync(relay.IPv4, timeout: 500);
+                    var res = await ping.SendPingAsync(relay.IPv4, timeout: 650);
 
 
                     if (res.RoundtripTime > 0)
                     {
-                        serverModel.Ping = res.RoundtripTime + "ms";
+                        server.Ping = res.RoundtripTime + "ms";
 
                         break;
                     }
@@ -43,14 +41,14 @@ namespace ServerPickerX.Helpers
             }
 
             // if pinging status remains after pinging all server relay addresses then its blocked or unreachable
-            if (serverModel.Ping == "Pinging server")
+            if (server.Ping == "Pinging server")
             {
-                serverModel.Status = "❌";
-                serverModel.Ping = "";
+                server.Status = "❌";
+                server.Ping = "";
             }
             else
             {
-                serverModel.Status = "✅";
+                server.Status = "✅";
             }
         }
 
