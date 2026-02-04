@@ -18,7 +18,7 @@ namespace ServerPickerX.Helpers
 
             ServerModel serverModel = server;
 
-            Ping ping = new();
+            using Ping ping = new();
 
             foreach (RelayModel relay in serverModel.RelayModels)
             {
@@ -32,6 +32,7 @@ namespace ServerPickerX.Helpers
                     if (res.RoundtripTime > 0)
                     {
                         serverModel.Ping = res.RoundtripTime + "ms";
+
                         break;
                     }
                 }
@@ -51,8 +52,6 @@ namespace ServerPickerX.Helpers
             {
                 serverModel.Status = "✅";
             }
-
-            ping.Dispose();
         }
 
         public static async Task CancelAllPings(List<Ping> pings)

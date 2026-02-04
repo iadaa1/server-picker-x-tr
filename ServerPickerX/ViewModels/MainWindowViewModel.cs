@@ -153,7 +153,7 @@ namespace ServerPickerX.ViewModels
                         "An error has occured! Please upload generated error file to github."
                     );
 
-                await LogHelper.LogErrorToFile(ex.Message, "An error has occured while blocking or unblocking servers.");
+                await FileHelper.LogErrorToFile(ex.Message, "An error has occured while blocking or unblocking servers.");
             }
 
             PendingOperation = false;

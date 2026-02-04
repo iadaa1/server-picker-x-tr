@@ -83,7 +83,7 @@ namespace ServerPickerX.ViewModels
                         "An error has occured while resetting firewall! Please upload generated error file to github."
                     );
 
-                await LogHelper.LogErrorToFile(ex.Message, "An error has occured while resetting firewall.");
+                await FileHelper.LogErrorToFile(ex.Message, "An error has occured while resetting firewall.");
             }
         }
     }

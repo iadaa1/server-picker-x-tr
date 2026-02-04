@@ -15,7 +15,7 @@
         Height="640"
         MinHeight="500"
         MaxHeight="960"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/favicon.ico"
         Title="ServerPickerX"
         SystemDecorations="BorderOnly"
         ExtendClientAreaToDecorationsHint="True"
@@ -36,8 +36,8 @@
 
     <Border
         Background="#373B78"
-        BorderBrush="#12FFFFFF"
-        BorderThickness="0.10">
+        BorderBrush="#575cd4"
+        BorderThickness="1.35">
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <!-- Title Bar -->
@@ -73,9 +73,11 @@
                 <Grid>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
 						<Button 
+                            Classes="main-btn"
                             Command="{Binding PingServers}" 
                             VerticalAlignment="Center"
-                            Foreground="White">
+                            Foreground="White"
+                            Margin="0,0,8,0">
                             Refresh
                         </Button>
                     </StackPanel>

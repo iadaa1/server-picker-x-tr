@@ -1,7 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <SelfContained>true</SelfContained> <!-- Ensures all required .NET files are bundled -->
-    <PublishSingleFile>true</PublishSingleFile> <!-- Bundles everything into a single executable file -->
+	<!-- Ensures all required .NET files are bundled -->
+    <SelfContained>true</SelfContained> 
+	<!-- Bundles everything into a single executable file -->
+    <PublishSingleFile>true</PublishSingleFile> 
+	<!-- Unnecessary assemblies or unused code are trimmed to reduce build size, this is very fragile to code changes -->
+	<PublishTrimmed>true</PublishTrimmed>
+	<!-- I still have to enable this despite using source generators or JsonSerializerContext -->
+	<JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>

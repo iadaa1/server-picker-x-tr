@@ -25,5 +25,14 @@
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="BorderThickness" Value="6"/>
         <Setter Property="FontSize" Value="14"/>
+
+        <Style Selector="^:pointerover /template/ ContentPresenter">
+			<Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background">
+            <Setter.Value>
+				<SolidColorBrush Color="White" Opacity="0.12" />
+            </Setter.Value>
+        </Setter> 
+        </Style>
     </Style>
 </Styles>

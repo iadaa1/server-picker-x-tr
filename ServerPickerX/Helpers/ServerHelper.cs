@@ -91,7 +91,7 @@ namespace ServerPickerX.Helpers
 
         public static async Task BlockUnblockServersWindows(bool shouldBlock, ObservableCollection<ServerModel> serverModels)
         {
-            Process process = ProcessHelper.CreateProcess("cmd.exe");
+            using Process process = ProcessHelper.CreateProcess("cmd.exe");
 
             foreach (ServerModel serverModel in serverModels)
             {
@@ -104,12 +104,12 @@ namespace ServerPickerX.Helpers
                         (shouldBlock ? " dir=out action=block protocol=ANY " + "remoteip=" + ipAddresses : "");
 
                 process.Start();
-                process.WaitForExit();
+                await process.WaitForExitAsync();
 
                 string stdOut = process.StandardOutput.ReadToEnd();
                 string stdErr = process.StandardError.ReadToEnd();
 
-                // skip throwing an exception if user tries to unblock a non-blocked server
+                // skip throwing exception if firewall rule doesn't exist when unblocking servers
                 if ((process.ExitCode == 1 || process.ExitCode < 0) &&
                     !$"{stdOut} {stdErr}".Contains("No rules match"))
                 {
@@ -118,13 +118,11 @@ namespace ServerPickerX.Helpers
 
                 await PingHelper.PingServer(serverModel);
             }
-
-            process.Dispose();
         }
 
         public static async Task BlockUnblockServersLinux(bool shouldBlock, ObservableCollection<ServerModel> serverModels)
         {
-            Process process = ProcessHelper.CreateProcess("sudo");
+            using Process process = ProcessHelper.CreateProcess("sudo");
 
             foreach (ServerModel serverModel in serverModels)
             {
@@ -135,11 +133,12 @@ namespace ServerPickerX.Helpers
                         (shouldBlock ? "-A" : "-D") + " INPUT -s " + ipAddresses + " -j DROP";
 
                 process.Start();
-                process.WaitForExit();
+                await process.WaitForExitAsync();
 
                 string stdOut = process.StandardOutput.ReadToEnd();
                 string stdErr = process.StandardError.ReadToEnd();
 
+                // skip throwing exception if iptables input chain rule doesn't exist when unblocking servers
                 if ((process.ExitCode == 1 || process.ExitCode < 0) && 
                     !$"{stdOut} {stdErr}".Contains("Bad rule (does a matching"))
                 {
@@ -148,8 +147,6 @@ namespace ServerPickerX.Helpers
 
                 await PingHelper.PingServer(serverModel);
             }
-
-            process.Dispose();
         }
     }
 }
