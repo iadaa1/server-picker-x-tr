@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Avalonia.Controls;
+using ServerPickerX.Views;
+using System;
 using System.Diagnostics;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ServerPickerX.Helpers
 {
@@ -19,7 +22,7 @@ namespace ServerPickerX.Helpers
             return process;
         }
 
-        public static void CreateProcessFromUrl(string url)
+        public async static Task OpenUrl(string url)
         {
             if (OperatingSystem.IsWindows())
             {
@@ -28,7 +31,13 @@ namespace ServerPickerX.Helpers
             }
             else if (OperatingSystem.IsLinux())
             {
-                Process.Start("x-www-browser", url);
+                var topLevel = TopLevel.GetTopLevel(MainWindow.Instance);
+
+                if (topLevel == null) {
+                    return;
+                }
+
+                await topLevel.Launcher.LaunchUriAsync(new Uri(url));
             }
             else
             {

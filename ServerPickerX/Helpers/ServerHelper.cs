@@ -45,8 +45,8 @@ namespace ServerPickerX.Helpers
                 }
 
                 current_server_revision = mainJson["revision"].ToString();
-                
-                // update json setting server revision value if initialized for the first time
+
+                // set server revision value in json setting if app is initialized for the first time
                 JsonSetting jsonSettings = MainWindow.jsonSettings;
 
                 if (jsonSettings.server_revision == "-1")

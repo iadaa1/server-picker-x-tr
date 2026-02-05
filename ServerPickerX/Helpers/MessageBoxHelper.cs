@@ -83,7 +83,7 @@ namespace ServerPickerX.Helpers
                 return;
             }
 
-            ProcessHelper.CreateProcessFromUrl(url);
+            await ProcessHelper.OpenUrl(url);
         }
     }
 }

@@ -16,6 +16,7 @@
     <Authors>FN-FAL113</Authors>
     <PackageProjectUrl>https://github.com/FN-FAL113/server-picker-x</PackageProjectUrl>
     <RepositoryUrl>https://github.com/FN-FAL113/server-picker-x</RepositoryUrl>
+    <ApplicationIcon>Assets\favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +31,10 @@
     <ApplicationDefinition Include="Styles\TitleBarButtonStyle.axaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\favicon.ico" />
   </ItemGroup>
 
   <ItemGroup>

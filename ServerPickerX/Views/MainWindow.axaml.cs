@@ -29,7 +29,7 @@ namespace ServerPickerX.Views
         {
             await jsonSettings.LoadSettings();
 
-            MainWindowViewModel viewModel = new MainWindowViewModel();
+            var viewModel = new MainWindowViewModel();
 
             DataContext = await viewModel.LoadServersAsync();
 
