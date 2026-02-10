@@ -19,9 +19,11 @@ namespace ServerPickerX.ConfigSections
 
     public class JsonSetting : Setting
     {
-        public string warning { get; private set; } = "Do not modify server revision! It will unblock all servers on launch";
+        public string warning { get; private set; } = "Do not modify server_revision or is_clustered!";
 
         public string server_revision { get; set; } = "-1";
+
+        public bool is_clustered { get; set; } = false;
 
         public bool version_check_on_startup { get; set; } = true;
 
@@ -32,7 +34,8 @@ namespace ServerPickerX.ConfigSections
         public readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions()
         {
             TypeInfoResolver = SourceGenerationContext.Default,
-            WriteIndented = true,        };
+            WriteIndented = true,        
+        };
 
         public override async Task<Setting> LoadSettings()
         {
@@ -58,6 +61,7 @@ namespace ServerPickerX.ConfigSections
                 JsonSetting localSettings = await JsonSerializer.DeserializeAsync<JsonSetting>(settingsFile, serializerOptions) ?? this;
 
                 server_revision = localSettings.server_revision;
+                is_clustered = localSettings.is_clustered;
                 version_check_on_startup = localSettings.version_check_on_startup;
             }
             catch (Exception ex) {
@@ -73,7 +77,7 @@ namespace ServerPickerX.ConfigSections
         {
             try
             {
-                // an extra curly brace is being added in the json file when serializing,
+                // an extra curly brace is being added when serializing,
                 // remove the contents first then serialize data to file
                 await File.WriteAllTextAsync(jsonFilePath, String.Empty);
 

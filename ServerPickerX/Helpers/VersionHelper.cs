@@ -58,7 +58,7 @@ namespace ServerPickerX.Helpers
                     );
             }
             catch (Exception ex) {
-                await MessageBoxHelper.ShowMessageBox("Error", "An error has occured while checking for newer version");
+                await MessageBoxHelper.ShowMessageBox("Error", ex.Message);
 
                 await FileHelper.LogErrorToFile(ex.Message, "An error has occured while checking for newer version");
             }

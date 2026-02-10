@@ -16,12 +16,18 @@ namespace ServerPickerX.Helpers
 {
     public class ServerHelper
     {
-        public static string current_server_revision = string.Empty;
+        public static string CURRENT_SERVER_REVISION = string.Empty;
 
-        public async static Task<ObservableCollection<ServerModel>> LoadServers()
+        // singleton objects for accessing servers on runtime, cache for fast access
+        public static List<ServerModel> UNCLUSTERED_SERVERS = [];
+
+        public static List<ServerModel> CLUSTERED_SERVERS = [];
+
+        // keywords for clustering servers
+        private static string[] CLUSTERED_SERVER_KEYWORDS = ["China","Sweden","Japan","India","Hong Kong,Netherlands"];
+
+        public async static Task LoadServers()
         {
-            ObservableCollection<ServerModel> serverModels = [];
-
             using HttpClient httpClient = new();
 
             try
@@ -44,14 +50,14 @@ namespace ServerPickerX.Helpers
                     throw new Exception("Server relay data unavailable. Please try again later.");
                 }
 
-                current_server_revision = mainJson["revision"].ToString();
+                CURRENT_SERVER_REVISION = mainJson["revision"].ToString();
 
                 // set server revision value in json setting if app is initialized for the first time
                 JsonSetting jsonSettings = MainWindow.jsonSettings;
 
                 if (jsonSettings.server_revision == "-1")
                 {
-                    jsonSettings.server_revision = current_server_revision;
+                    jsonSettings.server_revision = CURRENT_SERVER_REVISION;
 
                     await jsonSettings.SaveSettings();
                 }
@@ -63,12 +69,15 @@ namespace ServerPickerX.Helpers
                         continue;
                     }
 
+                    string serverDescription = server.Value["desc"].ToString();
+                    string clusterName = CLUSTERED_SERVER_KEYWORDS.FirstOrDefault(keyword => serverDescription.Contains(keyword), "");
+
                     var serverModel = new ServerModel
                     {
                         Flag = "/Assets/flags/"
-                            + server.Value["desc"]?.ToString() + $" ({server.Key}).png",
+                            + serverDescription + $" ({server.Key}).png",
                         Name = server.Key,
-                        Description = server.Value["desc"]?.ToString()
+                        Description = serverDescription,
                     };
 
                     foreach (JsonObject relay in server.Value["relays"] as JsonArray)
@@ -79,14 +88,33 @@ namespace ServerPickerX.Helpers
                         });
                     }
 
-                    serverModels.Add(serverModel);
+                    UNCLUSTERED_SERVERS.Add(serverModel);
+
+                    // create a clustered server if server model belongs to a cluster
+                    if (!String.IsNullOrEmpty(clusterName))
+                    {
+                        ServerModel clusteredServer = CLUSTERED_SERVERS.FirstOrDefault(server => server.Description == clusterName, new ServerModel());
+
+                        // merge server relay list to clustered server relay list
+                        clusteredServer.RelayModels.AddRange(serverModel.RelayModels);
+
+                        // initialize clustered server data if not an element inside clustered collection
+                        if (String.IsNullOrEmpty(clusteredServer.Description)) {
+                            clusteredServer.Flag = serverModel.Flag;
+                            clusteredServer.Name = "cluster";
+                            clusteredServer.Description = clusterName;
+
+                            CLUSTERED_SERVERS.Add(clusteredServer);
+                        }
+                    } else
+                    {
+                        CLUSTERED_SERVERS.Add(serverModel);
+                    }
                 }
             }
             catch (Exception ex) {
                 await MessageBoxHelper.ShowMessageBox("Error", ex.Message);
             }
-
-            return serverModels;
         }
 
         public static async Task BlockUnblockServersWindows(bool shouldBlock, ObservableCollection<ServerModel> serverModels)
@@ -115,8 +143,6 @@ namespace ServerPickerX.Helpers
                 {
                     throw new Exception("StdOut: " + stdOut + Environment.NewLine + "StdErr: " + stdErr);
                 }
-
-                await PingHelper.PingServer(serverModel);
             }
         }
 
@@ -144,8 +170,6 @@ namespace ServerPickerX.Helpers
                 {
                     throw new Exception("StdOut: " + stdOut + Environment.NewLine + "StdErr: " + stdErr);
                 }
-
-                await PingHelper.PingServer(serverModel);
             }
         }
     }

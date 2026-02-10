@@ -1,8 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MsBox.Avalonia.Enums;
+using ServerPickerX.ConfigSections;
+using ServerPickerX.Extensions;
 using ServerPickerX.Helpers;
 using ServerPickerX.Models;
+using ServerPickerX.Views;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,64 +19,86 @@ namespace ServerPickerX.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
-        public ObservableCollection<ServerModel>? ServerModels { get; set; }
+        public ObservableCollectionExtended<ServerModel> ServerModels { get; set; } = [];
 
         public ServerModel? SelectedDataGridItem { get; set; }
 
-        public List<Ping> Pings = [];
-
-        // Mvvm tool kit will auto generate source to make this property observable
+        // Mvvm tool kit will auto generate source code to make this property observable
         // When updating this property, reference it by its auto property name (PascalCase)
         [ObservableProperty]
-        public bool showProgressBar;
+        public bool showProgressBar = false;
 
         public bool PendingOperation = false;
 
-        public async Task<MainWindowViewModel> LoadServersAsync()
-        {
-            ServerModels = await ServerHelper.LoadServers();
+        public bool ServersInitialized = false;
 
-            return this;
+        public async Task LoadServers()
+        {
+            await ServerHelper.LoadServers();
+
+            await ClusterUnclusterServers();
+
+            ServersInitialized = true;
         }
 
         [RelayCommand]
-        public async Task PingServers()
+        public async Task ClusterUnclusterServers()
         {
-            if (ServerModels == null)
+            JsonSetting jsonSetting = MainWindow.jsonSettings;
+
+            // do not update json settings and unblock servers on first app load
+            if (ServersInitialized)
+            {
+                jsonSetting.is_clustered = !jsonSetting.is_clustered;
+
+                await jsonSetting.SaveSettings();
+
+                await UnblockAll();
+            }
+
+            List<ServerModel> serverModels = jsonSetting.is_clustered ?
+                ServerHelper.CLUSTERED_SERVERS : ServerHelper.UNCLUSTERED_SERVERS;
+
+            ServerModels.Clear();
+
+            ServerModels.AddRange(serverModels);
+
+            PingServers(serverModels);
+        }
+
+        [RelayCommand]
+        public void PingServers(ICollection<ServerModel> serverModels)
+        {
+            if (serverModels.Count == 0)
             {
                 return;
             }
 
-            if (Pings.Count > 0)
+            try
             {
-                await PingHelper.CancelAllPings(Pings);
+                foreach (ServerModel serverModel in serverModels)
+                {
+                    serverModel.PingServer();
+                }
+            } catch (InvalidOperationException ex) {
+                // when user suddenly tries to cluster or uncluster the servers while ServerModels is being iterated
             }
-
-            Ping ping = new Ping();
-
-            Pings.Add(ping);
-
-            foreach (ServerModel serverModel in ServerModels) {
-                await PingHelper.PingServer(serverModel);
-            } 
-
-            ping.Dispose();
         }
 
-        public async Task PingSelectedServer()
+        public void PingSelectedServer()
         {
             if (SelectedDataGridItem == null)
             {
                 return;
             }
 
-            await PingHelper.PingServer(SelectedDataGridItem);
+            SelectedDataGridItem.PingServer();
         }
 
         [RelayCommand]
         public async Task BlockAll()
         {
-            if (ServerModels == null || ServerModels.Count == 0)
+            if (ServerModels.Count == 0)
             {
                 return;
             }
@@ -86,7 +111,7 @@ namespace ServerPickerX.ViewModels
         {
             if (selectedServers.Count == 0)
             {
-                await MessageBoxHelper.ShowMessageBox("Info", "Please select any server to block");
+                await MessageBoxHelper.ShowMessageBox("Info", "Hey! Please select at least one server to block");
                 return;
             }
 
@@ -112,21 +137,20 @@ namespace ServerPickerX.ViewModels
         {
             if (selectedServers.Count == 0)
             {
-                await MessageBoxHelper.ShowMessageBox("Info", "Please select any server to unblock");
+                await MessageBoxHelper.ShowMessageBox("Info", "Hey! Please select at least one server to unblock");
                 return;
             }
 
             var serverModels = new ObservableCollection<ServerModel>(selectedServers.Cast<ServerModel>());
 
             await performOperation(false, serverModels);
-
         }
 
         public async Task performOperation(bool shouldBlock, ObservableCollection<ServerModel> serverModels)
         {
             if (PendingOperation)
             {
-                await MessageBoxHelper.ShowMessageBox("Info", "Pending operation. Please wait...", Icon.Setting);
+                await MessageBoxHelper.ShowMessageBox("Info", "Whoa! There's already a pending operation. Please wait...", Icon.Setting);
                 return;
             }
 
@@ -145,15 +169,18 @@ namespace ServerPickerX.ViewModels
                 {
                     await Task.Run(() => ServerHelper.BlockUnblockServersLinux(shouldBlock, serverModels));
                 }
+
+                // Ping servers in the background (parallel operation)
+                PingServers(serverModels);
             }
             catch (Exception ex)
             {
                 await MessageBoxHelper.ShowMessageBox(
                         "Error",
-                        "An error has occured! Please upload generated error file to github."
+                        "Oops! Something went wrong. Please upload the error log file to GitHub."
                     );
 
-                await FileHelper.LogErrorToFile(ex.Message, "An error has occured while blocking or unblocking servers.");
+                await FileHelper.LogErrorToFile(ex.Message, "An error has occurred while blocking or unblocking servers.");
             }
 
             PendingOperation = false;

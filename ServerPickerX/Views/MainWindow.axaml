@@ -60,7 +60,7 @@
             <Grid Grid.Row="1">
 				<Grid.RowDefinitions>
                     <!-- Top Buttons -->
-					<RowDefinition Height="44"></RowDefinition>
+					<RowDefinition Height="48"></RowDefinition>
                     <!-- Server DataGrid -->
 					<RowDefinition></RowDefinition>
                     <!-- Main Buttons -->
@@ -72,9 +72,20 @@
 
                 <Grid>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button 
+                            x:Name="clusterUnclusterBtn"
+                            Classes="main-btn"
+                            Command="{Binding ClusterUnclusterServers}" 
+                            Click="clusterUnclusterBtn_Click"
+                            VerticalAlignment="Center"
+                            Foreground="White"
+                            Margin="0,0,8,0">
+                            Cluster Servers
+                        </Button>
 						<Button 
                             Classes="main-btn"
                             Command="{Binding PingServers}" 
+                            CommandParameter="{Binding ServerModels}"
                             VerticalAlignment="Center"
                             Foreground="White"
                             Margin="0,0,8,0">

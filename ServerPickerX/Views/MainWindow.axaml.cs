@@ -29,15 +29,19 @@ namespace ServerPickerX.Views
         {
             await jsonSettings.LoadSettings();
 
+            clusterUnclusterBtn.Content = jsonSettings.is_clustered ? "Uncluster Servers" : "Cluster Servers";
+
             var viewModel = new MainWindowViewModel();
 
-            DataContext = await viewModel.LoadServersAsync();
+            await viewModel.LoadServers();
+
+            DataContext = viewModel;
 
             // unblock all server to sync new data if steam sdr api has been updated
-            if (jsonSettings.server_revision != ServerHelper.current_server_revision)
+            if (jsonSettings.server_revision != ServerHelper.CURRENT_SERVER_REVISION)
             {
                 await MessageBoxHelper.ShowMessageBox(
-                    "Please Standby", 
+                    "Please Standby",
                     "Server data just got updated by Valve! All blocked servers " + Environment.NewLine +
                     "will be unblocked in order to synchronize new server data",
                     MsBox.Avalonia.Enums.Icon.Setting
@@ -45,12 +49,9 @@ namespace ServerPickerX.Views
 
                 await viewModel.UnblockAll();
 
-                jsonSettings.server_revision = ServerHelper.current_server_revision;
+                jsonSettings.server_revision = ServerHelper.CURRENT_SERVER_REVISION;
 
                 await jsonSettings.SaveSettings();
-            } else
-            {
-                await viewModel.PingServers();
             }
 
             await VersionHelper.CheckVersion();
@@ -63,7 +64,7 @@ namespace ServerPickerX.Views
             // a cell is double clicked, ping the selected server
             if (source is Border || source is TextBlock || source is Image)
             {
-                await ((MainWindowViewModel)DataContext).PingSelectedServer();
+                ((MainWindowViewModel)DataContext).PingSelectedServer();
             }
         }
 
@@ -83,6 +84,15 @@ namespace ServerPickerX.Views
             pingSortDirection = pingSortDirection == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
 
             serverList.Columns[3].CustomSortComparer = new PingComparer(pingSortDirection);
+        }
+
+        private void clusterUnclusterBtn_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            if (!((MainWindowViewModel)DataContext).ServersInitialized) {
+                return;
+            }
+
+            clusterUnclusterBtn.Content = clusterUnclusterBtn?.Content?.ToString() == "Cluster Servers" ? "Uncluster Servers" : "Cluster Servers";
         }
     }
 }
