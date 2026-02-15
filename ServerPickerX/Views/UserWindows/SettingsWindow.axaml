@@ -47,6 +47,9 @@
             <Grid x:Name="TitleBar" 
                   Background="#373B78" 
                   PointerPressed="TitleBar_PointerPressed">
+                <TextBlock VerticalAlignment="Center" Margin="10,0,0,0" Foreground="White" FontWeight="Bold" FontSize="14">
+                    Settings
+                </TextBlock>
                 <userControls:TitleBarButtons/>
             </Grid>
 

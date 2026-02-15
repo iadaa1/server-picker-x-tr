@@ -24,9 +24,10 @@ public partial class FooterButtons : UserControl
 
     private void SettingsBtn_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        SettingsWindow settingsWindow = new();
-
-        settingsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        SettingsWindow settingsWindow = new()
+        {
+            WindowStartupLocation = WindowStartupLocation.CenterOwner
+        };
 
         settingsWindow.ShowDialog(MainWindow.Instance);
         settingsWindow.Activate();

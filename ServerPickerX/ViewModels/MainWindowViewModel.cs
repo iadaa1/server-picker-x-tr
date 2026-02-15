@@ -46,7 +46,7 @@ namespace ServerPickerX.ViewModels
         {
             JsonSetting jsonSetting = MainWindow.jsonSettings;
 
-            // do not update json settings and unblock servers on first app load
+            // do not update json settings nor unblock servers on first app load
             if (ServersInitialized)
             {
                 jsonSetting.is_clustered = !jsonSetting.is_clustered;
@@ -155,7 +155,6 @@ namespace ServerPickerX.ViewModels
             }
 
             PendingOperation = true;
-
             ShowProgressBar = true;
 
             try
@@ -184,7 +183,6 @@ namespace ServerPickerX.ViewModels
             }
 
             PendingOperation = false;
-
             ShowProgressBar = false;
         }
 

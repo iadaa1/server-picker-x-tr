@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
@@ -32,37 +33,33 @@ namespace ServerPickerX.Models
 
             using Ping ping = new();
 
+            Ping = "Pinging server";
+
             foreach (RelayModel relay in RelayModels)
             {
-                Ping = "Pinging server";
-
                 try
                 {
-                    var res = await ping.SendPingAsync(relay.IPv4, timeout: 1000);
+                    var res = await ping.SendPingAsync(relay.IPv4, timeout: 750);
 
-                    if (res.RoundtripTime > 0)
+                    if (res.Status == IPStatus.Success && res.RoundtripTime > 0)
                     {
                         Ping = res.RoundtripTime + "ms";
+                        Status = "✅";
 
                         break;
                     }
                 }
-                catch
+                catch (Exception ex) when (ex is PingException || ex is OperationCanceledException)
                 {
-                    // server timed out, proceed to next relay
                     continue;
-                }
+                } 
             }
 
             // if pinging status remains after pinging all server relay addresses then its blocked or unreachable
             if (Ping == "Pinging server")
             {
-                Status = "❌";
                 Ping = "";
-            }
-            else
-            {
-                Status = "✅";
+                Status = "❌";
             }
         }
     }

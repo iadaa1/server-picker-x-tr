@@ -11,20 +11,16 @@ namespace ServerPickerX.Helpers
         public static async Task LogErrorToFile(string exception, string sourceOfError, string? fileName = "")
         {
             var path = AppDomain.CurrentDomain.BaseDirectory + 
-                (String.IsNullOrEmpty(fileName) ? DateTimeOffset.Now.ToUnixTimeSeconds().ToString() : fileName) + ".txt";
+                (String.IsNullOrEmpty(fileName) ? "server_picker_x_" + DateTimeOffset.Now.ToUnixTimeSeconds().ToString() : fileName) + ".txt";
 
             await File.AppendAllTextAsync(path, sourceOfError + Environment.NewLine + exception);
-
-            if (OperatingSystem.IsLinux())
-            {
-                await ChangeLinuxFileOwner(path);
-            }
         }
 
         public static async Task ChangeLinuxFileOwner(string path)
         {
             // change the owner of the log file to current user since it defaults to 
-            // root user and prevents the current user to manipulate the log file
+            // root user and prevents the current user to manipulate the log file,
+            // only use this if the app is executed using sudo command.
             try
             {
                 var user = Environment.GetEnvironmentVariable("SUDO_USER");
@@ -38,7 +34,7 @@ namespace ServerPickerX.Helpers
                 await process.WaitForExitAsync();
             }
             catch (Exception ex) {
-                await MessageBoxHelper.ShowMessageBox("Error", "An error has occured while changing file owner for: " + path);
+                await MessageBoxHelper.ShowMessageBox("Error", "An error has occured while changing linux file owner for: " + path);
             }
         }
     }

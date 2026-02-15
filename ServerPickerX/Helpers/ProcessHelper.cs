@@ -24,25 +24,14 @@ namespace ServerPickerX.Helpers
 
         public async static Task OpenUrl(string url)
         {
-            if (OperatingSystem.IsWindows())
-            {
-                using var proc = new Process { StartInfo = { UseShellExecute = true, FileName = url } };
-                proc.Start();
-            }
-            else if (OperatingSystem.IsLinux())
-            {
-                var topLevel = TopLevel.GetTopLevel(MainWindow.Instance);
+            var topLevel = TopLevel.GetTopLevel(MainWindow.Instance);
 
-                if (topLevel == null) {
-                    return;
-                }
-
-                await topLevel.Launcher.LaunchUriAsync(new Uri(url));
-            }
-            else
+            if (topLevel == null)
             {
-                Process.Start("open", url);
+                return;
             }
+
+            await topLevel.Launcher.LaunchUriAsync(new Uri(url));
         }
     }
 }

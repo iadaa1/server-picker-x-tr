@@ -45,7 +45,7 @@ namespace ServerPickerX.ViewModels
                 return;
             }
 
-            Process process = ProcessHelper.CreateProcess();
+            using Process process = ProcessHelper.CreateProcess();
 
             try
             {

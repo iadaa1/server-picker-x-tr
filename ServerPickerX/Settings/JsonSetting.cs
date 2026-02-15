@@ -48,11 +48,6 @@ namespace ServerPickerX.ConfigSections
 
                     await JsonSerializer.SerializeAsync(newSettingsFile, this);
 
-                    if (OperatingSystem.IsLinux())
-                    {
-                        await FileHelper.ChangeLinuxFileOwner(jsonFilePath);
-                    }
-
                     return this;
                 }
 
