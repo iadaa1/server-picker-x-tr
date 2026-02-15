@@ -15,13 +15,13 @@ public partial class TitleBarButtons : UserControl
     {
         var parentWindow = TopLevel.GetTopLevel(this) as Window;
 
-        parentWindow.WindowState = WindowState.Minimized;
+        parentWindow?.WindowState = WindowState.Minimized;
     }
 
     private void CloseBtn_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         var parentWindow = TopLevel.GetTopLevel(this) as Window;
 
-        parentWindow.Close();
+        parentWindow?.Close();
     }
 }

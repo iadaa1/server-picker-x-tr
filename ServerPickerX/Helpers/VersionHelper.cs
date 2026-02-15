@@ -14,7 +14,7 @@ namespace ServerPickerX.Helpers
     {
         public async static Task CheckVersion()
         {
-            if (!MainWindow.jsonSettings.version_check_on_startup)
+            if (MainWindow.IsDebugBuild || !MainWindow.jsonSettings.version_check_on_startup)
             {
                 return;
             }

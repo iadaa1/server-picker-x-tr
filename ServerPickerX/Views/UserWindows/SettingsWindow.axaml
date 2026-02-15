@@ -47,7 +47,12 @@
             <Grid x:Name="TitleBar" 
                   Background="#373B78" 
                   PointerPressed="TitleBar_PointerPressed">
-                <TextBlock VerticalAlignment="Center" Margin="10,0,0,0" Foreground="White" FontWeight="Bold" FontSize="14">
+                <TextBlock 
+                    VerticalAlignment="Center" 
+                    Margin="10,0,0,0" 
+                    Foreground="White" 
+                    FontWeight="Bold" 
+                    FontSize="14">
                     Settings
                 </TextBlock>
                 <userControls:TitleBarButtons/>
@@ -84,6 +89,16 @@
                     </Grid>
                 </Grid>
             </Grid>
+
+            <Canvas>
+		          <TextBlock 
+                    x:Name="VersionTextBlock"
+                    Canvas.Top="224"
+                    Canvas.Right="8"
+                    Text="Version: " 
+                    Foreground="White"
+                    FontSize="10"/>
+              </Canvas>
        </Grid>
   </Border>
 </Window>

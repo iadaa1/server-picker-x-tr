@@ -14,6 +14,7 @@
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
         <StyleInclude Source="/Styles/TitleBarButtonStyle.axaml" />
         <StyleInclude Source="/Styles/MainButtonStyle.axaml" />
+        <StyleInclude Source="/Styles/TextBoxStyle.axaml" />
     </Application.Styles>
 
    

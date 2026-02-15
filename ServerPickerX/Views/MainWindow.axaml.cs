@@ -11,12 +11,24 @@ namespace ServerPickerX.Views
     public partial class MainWindow : Window
     {
         // initialize a static singleton object for accessing main window instance
-        public static MainWindow Instance { get; private set; }
+        public static MainWindow? Instance { get; private set; }
 
         private ListSortDirection pingSortDirection = ListSortDirection.Ascending;
 
         // initialize a static singleton object for handling json settings
         public static JsonSetting jsonSettings = new();
+
+        public static bool IsDebugBuild
+        {
+            get
+            {
+                #if DEBUG
+                     return true;
+                #else
+                     return false;
+                #endif
+            }
+        }
 
         public MainWindow()
         {
@@ -64,7 +76,7 @@ namespace ServerPickerX.Views
             // a cell is double clicked, ping the selected server
             if (source is Border || source is TextBlock || source is Image)
             {
-                ((MainWindowViewModel)DataContext).PingSelectedServer();
+                (DataContext as MainWindowViewModel)?.PingSelectedServer();
             }
         }
 
@@ -75,7 +87,7 @@ namespace ServerPickerX.Views
 
             var parentWindow = TopLevel.GetTopLevel(this) as Window;
 
-            parentWindow.BeginMoveDrag(e);
+            parentWindow?.BeginMoveDrag(e);
         }
 
         private void DataGridTextColumn_HeaderPointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
@@ -88,7 +100,7 @@ namespace ServerPickerX.Views
 
         private void clusterUnclusterBtn_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            if (!((MainWindowViewModel)DataContext).ServersInitialized) {
+            if (!(DataContext as MainWindowViewModel)?.ServersInitialized ?? true) {
                 return;
             }
 

@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using ServerPickerX.ViewModels;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ServerPickerX;
@@ -13,6 +14,8 @@ public partial class SettingsWindow : Window
         InitializeComponent();
 
         DataContext = new SettingsWindowViewModel();
+
+        VersionTextBlock.Text = "Version: " + Assembly.GetEntryAssembly().GetName().Version.ToString(3);
     }
 
     private void TitleBar_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
@@ -22,6 +25,6 @@ public partial class SettingsWindow : Window
 
         var parentWindow = TopLevel.GetTopLevel(this) as Window;
 
-        parentWindow.BeginMoveDrag(e);
+        parentWindow?.BeginMoveDrag(e);
     }
 }

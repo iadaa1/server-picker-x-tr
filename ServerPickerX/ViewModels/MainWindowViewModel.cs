@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MsBox.Avalonia.Enums;
 using ServerPickerX.ConfigSections;
@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -21,6 +22,14 @@ namespace ServerPickerX.ViewModels
     {
         public ObservableCollectionExtended<ServerModel> ServerModels { get; set; } = [];
 
+        public ObservableCollectionExtended<ServerModel> FilteredServerModels =>
+             string.IsNullOrWhiteSpace(SearchText)
+                ? ServerModels
+                : new ObservableCollectionExtended<ServerModel>(ServerModels.Where(s =>
+                    s.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                    s.Description.Contains(SearchText, StringComparison.OrdinalIgnoreCase)
+                ));
+
         public ServerModel? SelectedDataGridItem { get; set; }
 
         // Mvvm tool kit will auto generate source code to make this property observable
@@ -28,9 +37,19 @@ namespace ServerPickerX.ViewModels
         [ObservableProperty]
         public bool showProgressBar = false;
 
+        [ObservableProperty]
+        public string searchText = string.Empty;
+
         public bool PendingOperation = false;
 
         public bool ServersInitialized = false;
+
+        partial void OnSearchTextChanged(string value)
+        {
+            // An observable collection only reacts to changes made inside the collection (Add/Remove)
+            // Have to dispatch event for property changed to signal the UI that binding got updated
+            OnPropertyChanged(nameof(FilteredServerModels));
+        }
 
         public async Task LoadServers()
         {
@@ -62,6 +81,8 @@ namespace ServerPickerX.ViewModels
             ServerModels.Clear();
 
             ServerModels.AddRange(serverModels);
+
+            //FilteredServerModels.AddRange(serverModels);
 
             PingServers(serverModels);
         }

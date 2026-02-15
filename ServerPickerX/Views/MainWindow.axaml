@@ -74,6 +74,16 @@
 
 
                 <Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBox 
+                            Classes="search-textbox"
+                            Text="{Binding SearchText}"
+                            Watermark="Search servers..." 
+                            VerticalAlignment="Center"
+                            Width="132"
+                            Margin="8,0,8,0"
+                            BorderThickness="1"/>
+                    </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button 
                             x:Name="clusterUnclusterBtn"
@@ -98,9 +108,9 @@
                 </Grid>
 
                 <Grid Grid.Row="1">
-                    <DataGrid
+                     <DataGrid
                            x:Name="serverList"
-                           ItemsSource="{Binding ServerModels}"
+                           ItemsSource="{Binding FilteredServerModels}"
                            SelectedItem="{Binding SelectedDataGridItem}"
                            SelectionMode="Extended"
                            IsReadOnly="True"

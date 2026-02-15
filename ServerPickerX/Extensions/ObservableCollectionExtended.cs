@@ -7,6 +7,14 @@ namespace ServerPickerX.Extensions
 {
     public class ObservableCollectionExtended<T>: ObservableCollection<T>
     {
+        public ObservableCollectionExtended()
+        {
+        }
+
+        public ObservableCollectionExtended(IEnumerable<T> collection) : base([.. collection ?? throw new ArgumentNullException(nameof(collection))])
+        {
+        }
+
         public ICollection<T> AddRange(ICollection<T> values)
         {
             foreach (var item in values)
