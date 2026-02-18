@@ -7,7 +7,7 @@ namespace ServerPickerX.Services.Loggers
         public void LogError(string message, string? details = null)
         {
             string logMessage = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] ERROR: {message}";
-            
+
             if (!string.IsNullOrEmpty(details))
             {
                 logMessage += $" | Details: {details}";

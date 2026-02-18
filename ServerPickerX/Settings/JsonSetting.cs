@@ -4,6 +4,7 @@ using ServerPickerX.Services.Loggers;
 using ServerPickerX.Services.MessageBoxes;
 using ServerPickerX.Settings;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -54,12 +55,13 @@ namespace ServerPickerX.Settings
         public JsonSetting(
             IMessageBoxService messageBoxService,
             ILoggerService logger
-            ) 
+            )
         {
             _messageBoxService = messageBoxService;
             _logger = logger;
         }
 
+        [RequiresUnreferencedCode()]
         public override async Task<Setting> LoadSettingsAsync()
         {
             try
@@ -84,7 +86,8 @@ namespace ServerPickerX.Settings
                 is_clustered = localSettings.is_clustered;
                 version_check_on_startup = localSettings.version_check_on_startup;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 _logger.LogError("An error has occured while loading json settings", ex.Message);
 
                 await _messageBoxService.ShowMessageBoxAsync("Error", "An error has occured while loading json settings");
@@ -108,7 +111,8 @@ namespace ServerPickerX.Settings
 
                 return true;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 _logger.LogError("An error has occured while saving json settings", ex.Message);
 
                 await _messageBoxService.ShowMessageBoxAsync("Error", "An error has occured while saving json settings");

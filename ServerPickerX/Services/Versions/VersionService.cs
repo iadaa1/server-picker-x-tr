@@ -22,8 +22,8 @@ namespace ServerPickerX.Services.Versions
         public VersionService(
             ILoggerService logger,
             IMessageBoxService messageBoxService,
-            HttpClient httpClient, 
-            JsonSetting jsonSettings 
+            HttpClient httpClient,
+            JsonSetting jsonSettings
             )
         {
             _logger = logger;

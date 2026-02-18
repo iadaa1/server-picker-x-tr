@@ -8,7 +8,7 @@ namespace ServerPickerX.Models
 {
     // ObservableObject base class requires a partial class type to  
     // generate boiler plate code for common MVVM implementations
-    public partial class ServerModel: ObservableObject
+    public partial class ServerModel : ObservableObject
     {
         public string Flag { get; set; } = "";
 
@@ -52,7 +52,7 @@ namespace ServerPickerX.Models
                 catch (Exception ex) when (ex is PingException || ex is OperationCanceledException)
                 {
                     continue;
-                } 
+                }
             }
 
             // if pinging status remains after pinging all server relay addresses then its blocked or unreachable

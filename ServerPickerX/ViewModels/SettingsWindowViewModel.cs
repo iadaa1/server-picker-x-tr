@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ServerPickerX.ViewModels
 {
-    public partial class SettingsWindowViewModel: ViewModelBase
+    public partial class SettingsWindowViewModel : ViewModelBase
     {
         public bool VersionCheckOnStartup { get; set; }
 

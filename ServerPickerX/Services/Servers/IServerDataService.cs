@@ -10,5 +10,5 @@ namespace ServerPickerX.Services.Servers
         string GetCurrentRevision();
         ServerData GetServerData();
         List<string> GetClusterKeywords();
-    } 
+    }
 }

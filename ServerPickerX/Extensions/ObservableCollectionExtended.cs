@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ServerPickerX.Extensions
 {
-    public class ObservableCollectionExtended<T>: ObservableCollection<T>
+    public class ObservableCollectionExtended<T> : ObservableCollection<T>
     {
         public ObservableCollectionExtended()
         {

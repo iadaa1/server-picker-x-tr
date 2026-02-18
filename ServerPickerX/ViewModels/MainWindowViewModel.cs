@@ -27,11 +27,11 @@ namespace ServerPickerX.ViewModels
         private readonly JsonSetting _jsonSetting;
 
         // Parameterless constructor, allows design previewer to instantiate this class since it doesn't support DI
-        public MainWindowViewModel() 
+        public MainWindowViewModel()
         {
             _loggerServiceService = App.ServiceProvider.GetRequiredService<ILoggerService>();
-            _messageBoxService = App.ServiceProvider.GetRequiredService<IMessageBoxService>(); 
-            _serverDataService = App.ServiceProvider.GetRequiredService<IServerDataService>(); 
+            _messageBoxService = App.ServiceProvider.GetRequiredService<IMessageBoxService>();
+            _serverDataService = App.ServiceProvider.GetRequiredService<IServerDataService>();
             _systemFirewallService = App.ServiceProvider.GetRequiredService<ISystemFirewallService>();
             _jsonSetting = App.ServiceProvider.GetRequiredService<JsonSetting>();
         }
@@ -132,7 +132,9 @@ namespace ServerPickerX.ViewModels
                 {
                     serverModel.PingServer();
                 }
-            } catch (InvalidOperationException ex) {
+            }
+            catch (InvalidOperationException ex)
+            {
                 // when user suddenly tries to cluster or uncluster the servers while ServerModels is being iterated
             }
         }
@@ -205,8 +207,8 @@ namespace ServerPickerX.ViewModels
             if (PendingOperation)
             {
                 await _messageBoxService.ShowMessageBoxAsync(
-                    "Info", 
-                    "Whoa! There's already a pending operation. Please wait...", 
+                    "Info",
+                    "Whoa! There's already a pending operation. Please wait...",
                     Icon.Setting
                     );
 
@@ -224,7 +226,8 @@ namespace ServerPickerX.ViewModels
                     await Task.Run(() => _systemFirewallService.BlockServersAsync(serverModels));
 
                     _loggerServiceService.LogInfo("Servers blocked successfully");
-                } else
+                }
+                else
                 {
                     await Task.Run(() => _systemFirewallService.UnblockServersAsync(serverModels));
 
@@ -249,8 +252,8 @@ namespace ServerPickerX.ViewModels
         }
 
         public IServerDataService GetServerDataService()
-        { 
-            return _serverDataService; 
+        {
+            return _serverDataService;
         }
 
     }

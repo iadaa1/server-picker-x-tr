@@ -11,8 +11,8 @@ using ServerPickerX.Services.Loggers;
 namespace ServerPickerX.Services.Servers
 {
     public class DeadLockServerDataService(
-        ILoggerService _logger, 
-        HttpClient _httpClient, 
+        ILoggerService _logger,
+        HttpClient _httpClient,
         JsonSetting _jsonSettings
         ) : IServerDataService
     {

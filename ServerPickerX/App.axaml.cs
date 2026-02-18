@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using Avalonia;
@@ -94,6 +95,7 @@ namespace ServerPickerX
             base.OnFrameworkInitializationCompleted();
         }
 
+        [RequiresUnreferencedCode("Calls Avalonia.Data.Core.Plugins.BindingPlugins.DataValidators")]
         private void DisableAvaloniaDataAnnotationValidation()
         {
             // Get an array of plugins to remove

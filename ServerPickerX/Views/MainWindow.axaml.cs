@@ -21,11 +21,11 @@ namespace ServerPickerX.Views
         {
             get
             {
-                #if DEBUG
-                    return true;
-                #else
+#if DEBUG
+                return true;
+#else
                     return false;
-                #endif
+#endif
             }
         }
 
@@ -153,7 +153,7 @@ namespace ServerPickerX.Views
 
             await _messageBoxService.ShowMessageBoxAsync(
                     "Please Standby",
-                    "Server data just got updated by Valve! All blocked servers " 
+                    "Server data just got updated by Valve! All blocked servers "
                     + Environment.NewLine +
                     "will be unblocked in order to synchronize new server data",
                     MsBox.Avalonia.Enums.Icon.Setting
