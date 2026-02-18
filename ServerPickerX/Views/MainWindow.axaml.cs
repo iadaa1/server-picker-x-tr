@@ -42,6 +42,7 @@ namespace ServerPickerX.Views
         private readonly IVersionService _versionService;
         private readonly JsonSetting _jsonSetting;
 
+        // Parameterless constructor, allows design previewer to instantiate this class since it doesn't support DI
         public MainWindow()
         {
             InitializeComponent();
@@ -50,6 +51,21 @@ namespace ServerPickerX.Views
             _messageBoxService = App.ServiceProvider.GetRequiredService<IMessageBoxService>();
             _versionService = App.ServiceProvider.GetRequiredService<VersionService>();
             _jsonSetting = App.ServiceProvider.GetRequiredService<JsonSetting>();
+        }
+
+        // DI constructor, allows inversion of control and unit tests mocking
+        public MainWindow(
+            IMessageBoxService messageBoxService,
+            IVersionService versionService,
+            JsonSetting jsonSetting
+            )
+        {
+            InitializeComponent();
+            Instance = this;
+
+            _messageBoxService = messageBoxService;
+            _versionService = versionService;
+            _jsonSetting = jsonSetting;
         }
 
         private async void Window_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

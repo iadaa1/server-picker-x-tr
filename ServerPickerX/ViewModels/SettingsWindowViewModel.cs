@@ -1,5 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
+using ServerPickerX.Services.Loggers;
+using ServerPickerX.Services.MessageBoxes;
+using ServerPickerX.Services.Servers;
 using ServerPickerX.Services.SystemFirewalls;
 using ServerPickerX.Settings;
 using System.Threading.Tasks;
@@ -10,15 +13,26 @@ namespace ServerPickerX.ViewModels
     {
         public bool VersionCheckOnStartup { get; set; }
 
-        private readonly JsonSetting _jsonSetting;
         private readonly ISystemFirewallService _systemFirewallService;
+        private readonly JsonSetting _jsonSetting;
 
-        // Parameterless constructors for windows and viewmodels, access services instead through the container
-        // DI through constructors doesn't work with design previewer since it has no clue on providing parameters
+        // Parameterless constructor, allows design previewer to instantiate this class since it doesn't support DI
         public SettingsWindowViewModel()
         {
-            _jsonSetting = App.ServiceProvider.GetRequiredService<JsonSetting>();
             _systemFirewallService = App.ServiceProvider.GetRequiredService<ISystemFirewallService>();
+            _jsonSetting = App.ServiceProvider.GetRequiredService<JsonSetting>();
+
+            VersionCheckOnStartup = _jsonSetting.version_check_on_startup;
+        }
+
+        // DI constructor, allows inversion of control and unit tests mocking
+        public SettingsWindowViewModel(
+            ISystemFirewallService systemFirewallService,
+            JsonSetting jsonSetting
+            )
+        {
+            _systemFirewallService = systemFirewallService;
+            _jsonSetting = jsonSetting;
 
             VersionCheckOnStartup = _jsonSetting.version_check_on_startup;
         }

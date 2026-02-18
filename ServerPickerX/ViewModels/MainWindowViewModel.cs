@@ -26,8 +26,7 @@ namespace ServerPickerX.ViewModels
         private readonly ISystemFirewallService _systemFirewallService;
         private readonly JsonSetting _jsonSetting;
 
-        // Parameterless constructors for windows and viewmodels, access services instead through the container
-        // DI through constructors doesn't work with design previewer since it has no clue on providing parameters
+        // Parameterless constructor, allows design previewer to instantiate this class since it doesn't support DI
         public MainWindowViewModel() 
         {
             _loggerServiceService = App.ServiceProvider.GetRequiredService<ILoggerService>();
@@ -35,6 +34,22 @@ namespace ServerPickerX.ViewModels
             _serverDataService = App.ServiceProvider.GetRequiredService<IServerDataService>(); 
             _systemFirewallService = App.ServiceProvider.GetRequiredService<ISystemFirewallService>();
             _jsonSetting = App.ServiceProvider.GetRequiredService<JsonSetting>();
+        }
+
+        // DI constructor, allows inversion of control and unit tests mocking
+        public MainWindowViewModel(
+            ILoggerService loggerService,
+            IMessageBoxService messageBoxService,
+            IServerDataService serverDataService,
+            ISystemFirewallService systemFirewallService,
+            JsonSetting jsonSetting
+            )
+        {
+            _loggerServiceService = loggerService;
+            _messageBoxService = messageBoxService;
+            _serverDataService = serverDataService;
+            _systemFirewallService = systemFirewallService;
+            _jsonSetting = jsonSetting;
         }
 
         public ObservableCollectionExtended<ServerModel> ServerModels { get; set; } = [];
@@ -64,7 +79,7 @@ namespace ServerPickerX.ViewModels
 
         partial void OnSearchTextChanged(string value)
         {
-            // An observable collection only reacts to changes through add and remove
+            // An observable collection only reacts to add or remove elements
             // Dispatch prop changed event manually to signal the UI for data binding changes
             OnPropertyChanged(nameof(FilteredServerModels));
         }
@@ -216,7 +231,7 @@ namespace ServerPickerX.ViewModels
                     _loggerServiceService.LogInfo("Servers unblocked successfully");
                 }
 
-                // Ping servers in the background (parallel operation)
+                // Ping servers (parallel operation)
                 PingServers(serverModels);
             }
             catch (Exception ex)
