@@ -61,7 +61,8 @@ namespace ServerPickerX.Settings
             _logger = logger;
         }
 
-        [RequiresUnreferencedCode()]
+#pragma warning disable IL2026
+        // Reflection is partially used here and might not be trim-compatible unless JsonSerializerIsReflectionEnabledByDefault is set to true in .csproj
         public override async Task<Setting> LoadSettingsAsync()
         {
             try
@@ -96,6 +97,7 @@ namespace ServerPickerX.Settings
             return this;
         }
 
+        // Reflection is partially used here and might not be trim-compatible unless JsonSerializerIsReflectionEnabledByDefault is set to true in .csproj
         public override async Task<bool> SaveSettingsAsync()
         {
             try

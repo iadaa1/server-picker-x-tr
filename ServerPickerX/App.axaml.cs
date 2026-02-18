@@ -32,8 +32,11 @@ namespace ServerPickerX
             AvaloniaXamlLoader.Load(this);
         }
 
+#pragma warning disable IL2026
+        // Reflection is partially used here and might not be trim-compatible unless JsonSerializerIsReflectionEnabledByDefault is set to true in .csproj
         public override void OnFrameworkInitializationCompleted()
         {
+
             var serviceCollection = new ServiceCollection();
 
             serviceCollection.AddSingleton<ILoggerService, FileLoggerService>();
@@ -95,7 +98,7 @@ namespace ServerPickerX
             base.OnFrameworkInitializationCompleted();
         }
 
-        [RequiresUnreferencedCode("Calls Avalonia.Data.Core.Plugins.BindingPlugins.DataValidators")]
+        // Reflection is partially used here and might not be trim-compatible unless JsonSerializerIsReflectionEnabledByDefault is set to true in .csproj
         private void DisableAvaloniaDataAnnotationValidation()
         {
             // Get an array of plugins to remove
