@@ -74,7 +74,6 @@
 					<RowDefinition Height="48"></RowDefinition>
                 </Grid.RowDefinitions>
 
-
                 <Grid>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                         <TextBox 
@@ -85,7 +84,7 @@
                             Width="144"
                             Margin="8,0,0,0"
                             BorderThickness="1"/>
-<ComboBox 
+                        <ComboBox 
                              x:Name="gameComboBox" 
                              Classes="game-combobox"
                              SelectionChanged="gameComboBox_SelectionChanged"
@@ -108,7 +107,8 @@
                             Margin="0,0,8,0">
                             Cluster Servers
                         </Button>
-						<Button 
+                        <Button 
+                            x:Name="refreshBtn"
                             Classes="main-btn"
                             Command="{Binding PingServers}" 
                             CommandParameter="{Binding ServerModels}"

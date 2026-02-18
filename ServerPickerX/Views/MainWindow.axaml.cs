@@ -1,20 +1,13 @@
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using ServerPickerX.Comparers;
-using ServerPickerX.Helpers;
-using ServerPickerX.Services.Loggers;
 using ServerPickerX.Services.MessageBoxes;
-using ServerPickerX.Services.Processes;
-using ServerPickerX.Services.Servers;
-using ServerPickerX.Services.SystemFirewalls;
 using ServerPickerX.Services.Versions;
 using ServerPickerX.Settings;
 using ServerPickerX.ViewModels;
 using System;
 using System.ComponentModel;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace ServerPickerX.Views
@@ -71,6 +64,9 @@ namespace ServerPickerX.Views
         private async void Window_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             await InitializeApp();
+
+            ToolTip.SetTip(refreshBtn, "Refresh ping");
+            ToolTip.SetTip(gameComboBox, "Select the game mode");
         }
 
         private async void gameComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -136,6 +132,11 @@ namespace ServerPickerX.Views
             clusterUnclusterBtn.Content = _jsonSetting.is_clustered
                 ? "Uncluster Servers"
                 : "Cluster Servers";
+
+            // Set tooltip info for (un)cluster button
+            var action = _jsonSetting.is_clustered ? "Uncluster" : "Cluster";
+
+            ToolTip.SetTip(clusterUnclusterBtn, $"Click to {action.ToLower()} servers");
         }
 
         private async Task SyncServersAsync(MainWindowViewModel vm)
