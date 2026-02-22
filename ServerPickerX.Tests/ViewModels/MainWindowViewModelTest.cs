@@ -156,14 +156,14 @@ namespace ServerPickerX.Tests.ViewModels
 
             // Act
             await _vm.LoadServersAsync();
-            _vm.SelectedDataGridItem = _vm.ServerModels[0];
+            _vm.SelectedDataGridServerModel = _vm.ServerModels[0];
             _vm.PingSelectedServer();
 
             Thread.Sleep(70); // Pinging is done in parallel operation and is not awaited
 
             // Assert
             Assert.NotEmpty(_vm.ServerModels);
-            Assert.True(_vm.SelectedDataGridItem.Ping?.Contains("ms"));
+            Assert.True(_vm.SelectedDataGridServerModel.Ping?.Contains("ms"));
             Assert.Equal("✅", _vm.ServerModels[0].Status);
         }
 
