@@ -8,7 +8,7 @@
 
 </div>
 
-A lightweight server picker for CS2 and Deadlock with cross-platform support for **Windows** and **Linux**. A rewrite of my CS2 Server Picker to a modern MVVM pattern and service-based app. Designed to manage connections by blocking or unblocking specific servers based on geographic location.
+A lightweight server picker for CS2 and Deadlock with cross-platform support for **Windows** and **Linux**. A modern MVVM pattern and service-based application that is a rewrite of my CS2 Server Picker. Designed to control connections by blocking or unblocking servers according to their location.
 
 ## ⬇️ Download
 ### [Releases](https://github.com/FN-FAL113/server-picker-x/releases)
@@ -57,7 +57,7 @@ A lightweight server picker for CS2 and Deadlock with cross-platform support for
 If you encounter a bug, open an issue on GitHub and include:
 * Operating System
 * Steps to reproduce
-* Any info/error logs (the app writes them to server-picker-x.log)
+* Any info/error logs (the app writes them to `server_picker_x_log.txt`)
 
 ## 🛠️ Building from Source
 #### Clone the repo
