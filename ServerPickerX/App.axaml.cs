@@ -51,19 +51,14 @@ namespace ServerPickerX
             {
                 JsonSetting jsonSetting = serviceProvider.GetRequiredService<JsonSetting>();
 
-                if (jsonSetting.game_mode == GameModes.CounterStrike2)
+                return jsonSetting.game_mode switch
                 {
-                    return serviceProvider.GetRequiredService<CS2ServerDataService>();
-                }
-                else if (jsonSetting.game_mode == GameModes.Deadlock)
-                {
-                    return serviceProvider.GetRequiredService<DeadLockServerDataService>();
-                }
-                else
-                {
-                    throw new NotSupportedException("Server data services are only available for CS2 and Deadlock");
-                }
+                    GameModes.CounterStrike2 => serviceProvider.GetRequiredService<CS2ServerDataService>(),
+                    GameModes.Deadlock => serviceProvider.GetRequiredService<DeadLockServerDataService>(),
+                    _ => throw new NotSupportedException($"Unsupported game mode: {jsonSetting.game_mode}")
+                };
             });
+
             serviceCollection.AddTransient<WindowsFirewallService>();
             serviceCollection.AddTransient<LinuxFirewallService>();
             serviceCollection.AddTransient<ISystemFirewallService>(serviceProvider =>
@@ -76,11 +71,10 @@ namespace ServerPickerX
                 {
                     return serviceProvider.GetRequiredService<LinuxFirewallService>();
                 }
-                else
-                {
-                    throw new PlatformNotSupportedException("Firewall services are only available for Windows and Linux");
-                }
+
+                throw new PlatformNotSupportedException("Firewall services are only available for Windows and Linux");
             });
+
             serviceCollection.AddTransient<MainWindowViewModel>();
             serviceCollection.AddTransient<SettingsWindowViewModel>();
 
