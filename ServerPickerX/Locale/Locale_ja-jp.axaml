@@ -1,0 +1,18 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:String x:Key="LanguageCode">ja-jp</x:String>
+  <x:String x:Key="ClusterServers">サーバーをグループ化</x:String>
+  <x:String x:Key="UnclusterServers">サーバーのグループ解除</x:String>
+  <x:String x:Key="Refresh">更新</x:String>
+  <x:String x:Key="SearchForServers">サーバーを検索...</x:String>
+  <x:String x:Key="BlockAll">すべてブロック</x:String>
+  <x:String x:Key="BlockSelected">選択したサーバーをブロック</x:String>
+  <x:String x:Key="UnblockAll">すべて解除</x:String>
+  <x:String x:Key="UnblockSelected">選択したサーバーを解除</x:String>
+  <x:String x:Key="CheckForNewVersion">起動時に新しいバージョンを確認</x:String>
+  <x:String x:Key="ResetFirewall">ファイアウォールをリセット</x:String>
+  <x:String x:Key="GameModeToolTip">ゲームモードを選択</x:String>
+  <x:String x:Key="ClusterUnclusterToolTip">サーバーをグループ化またはグループ解除</x:String>
+  <x:String x:Key="RefreshToolTip">すべてのサーバーの ping を更新</x:String>
+  <x:String x:Key="UnblockAllConflict">この操作は、ファイアウォールの競合を防ぐためにまずすべてのサーバーを解除します。</x:String>
+</ResourceDictionary>

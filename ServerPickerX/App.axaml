@@ -10,10 +10,14 @@
 
     <Application.Resources>
 		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
+<ResourceDictionary.MergedDictionaries>
 				<ResourceInclude Source="/Locale/Locale_en-us.axaml" />
 				<ResourceInclude Source="/Locale/Locale_es-es.axaml" />
 				<ResourceInclude Source="/Locale/Locale_zh-cn.axaml" />
+				<ResourceInclude Source="/Locale/Locale_ja-jp.axaml" />
+				<ResourceInclude Source="/Locale/Locale_sv-se.axaml" />
+				<ResourceInclude Source="/Locale/Locale_ru-ru.axaml" />
+				<ResourceInclude Source="/Locale/Locale_de-de.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
