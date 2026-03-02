@@ -15,4 +15,6 @@
   <x:String x:Key="ClusterUnclusterToolTip">分组或取消分组服务器</x:String>
   <x:String x:Key="RefreshToolTip">刷新所有服务器 ping</x:String>
   <x:String x:Key="UnblockAllConflict">此操作将首先解除所有服务器的阻止，以防止防火墙冲突。</x:String>
+  <x:String x:Key="LanguageComboBoxToolTip">选择语言</x:String>
+  <x:String x:Key="ResetFirewallToolTip">重置防火墙规则</x:String>
 </ResourceDictionary>

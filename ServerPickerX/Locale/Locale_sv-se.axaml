@@ -15,4 +15,6 @@
   <x:String x:Key="ClusterUnclusterToolTip">Gruppera eller avgruppera servrar</x:String>
   <x:String x:Key="RefreshToolTip">Uppdatera ping för alla servrar</x:String>
   <x:String x:Key="UnblockAllConflict">Detta åtgärder kommer att avblockera alla servrar först för att undvika brandvägskonflikter.</x:String>
+  <x:String x:Key="LanguageComboBoxToolTip">Välj språk</x:String>
+  <x:String x:Key="ResetFirewallToolTip">Återställ brandväggsregler</x:String>
 </ResourceDictionary>

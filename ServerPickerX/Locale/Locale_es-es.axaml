@@ -15,4 +15,6 @@
   <x:String x:Key="ClusterUnclusterToolTip">Agrupar o desagrupar servidores</x:String>
   <x:String x:Key="RefreshToolTip">Actualizar el ping de todos los servidores</x:String>
   <x:String x:Key="UnblockAllConflict">Esta acción desbloqueará primero todos los servidores para evitar conflictos de firewall.</x:String>
+  <x:String x:Key="LanguageComboBoxToolTip">Seleccionar idioma</x:String>
+  <x:String x:Key="ResetFirewallToolTip">Restablecer reglas del firewall</x:String>
 </ResourceDictionary>

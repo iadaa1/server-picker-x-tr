@@ -15,4 +15,6 @@
   <x:String x:Key="ClusterUnclusterToolTip">サーバーをグループ化またはグループ解除</x:String>
   <x:String x:Key="RefreshToolTip">すべてのサーバーの ping を更新</x:String>
   <x:String x:Key="UnblockAllConflict">この操作は、ファイアウォールの競合を防ぐためにまずすべてのサーバーを解除します。</x:String>
+  <x:String x:Key="LanguageComboBoxToolTip">言語を選択</x:String>
+  <x:String x:Key="ResetFirewallToolTip">ファイアウォールルールをリセット</x:String>
 </ResourceDictionary>
