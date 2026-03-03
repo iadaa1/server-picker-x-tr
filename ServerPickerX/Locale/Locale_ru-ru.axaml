@@ -1,0 +1,20 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:String x:Key="LanguageCode">ru-ru</x:String>
+  <x:String x:Key="ClusterServers">Сгруппировать серверы</x:String>
+  <x:String x:Key="UnclusterServers">Разгруппировать серверы</x:String>
+  <x:String x:Key="Refresh">Обновить</x:String>
+  <x:String x:Key="SearchForServers">Поиск серверов...</x:String>
+  <x:String x:Key="BlockAll">Блокировать все</x:String>
+  <x:String x:Key="BlockSelected">Блокировать выбранные</x:String>
+  <x:String x:Key="UnblockAll">Разблокировать все</x:String>
+  <x:String x:Key="UnblockSelected">Разблокировать выбранные</x:String>
+  <x:String x:Key="CheckForNewVersion">Проверять новые версии при запуске</x:String>
+  <x:String x:Key="ResetFirewall">Сбросить брандмауэр</x:String>
+  <x:String x:Key="GameModeToolTip">Выберите режим игры</x:String>
+  <x:String x:Key="ClusterUnclusterToolTip">Группировать или разгруппировать серверы</x:String>
+  <x:String x:Key="RefreshToolTip">Обновить пинг всех серверов</x:String>
+  <x:String x:Key="UnblockAllConflict">Это действие сначала разблокирует все сервера для предотвращения конфликтов брандмауэра.</x:String>
+  <x:String x:Key="LanguageComboBoxToolTip">Выберите язык</x:String>
+  <x:String x:Key="ResetFirewallToolTip">Сбросить правила брандмауэра</x:String>
+</ResourceDictionary>

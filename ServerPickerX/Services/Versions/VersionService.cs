@@ -54,17 +54,17 @@ namespace ServerPickerX.Services.Versions
                     );
                 }
 
-                var jsonArray = (JsonArray)await JsonArray.ParseAsync(res);
+                var jsonArray = (JsonArray?)await JsonArray.ParseAsync(res);
 
                 if (jsonArray?[0]?["tag_name"] == null)
                 {
                     return;
                 }
 
-                string assemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString(3);
+                string assemblyVersion = Assembly.GetEntryAssembly()!.GetName()!.Version!.ToString(3);
 
                 // version is up to date
-                if (assemblyVersion == jsonArray[0]["tag_name"].ToString().Split("v")[1])
+                if (assemblyVersion == jsonArray[0]!["tag_name"]!.ToString().Split("v")[1])
                 {
                     return;
                 }
@@ -76,9 +76,9 @@ namespace ServerPickerX.Services.Versions
                         "https://github.com/FN-FAL113/server-picker-x/releases"
                     );
             }
-catch (Exception ex)
+            catch (Exception ex)
             {
-await _logger.LogErrorAsync("Failed to check version", ex.Message);
+                await _logger.LogErrorAsync("Failed to check version", ex.Message);
 
                 await _messageBoxService.ShowMessageBoxAsync("Error", ex.Message);
             }

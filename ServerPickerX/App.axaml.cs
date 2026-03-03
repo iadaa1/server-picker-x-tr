@@ -9,6 +9,7 @@ using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using ServerPickerX.Constants;
+using ServerPickerX.Services.Localizations;
 using ServerPickerX.Services.Loggers;
 using ServerPickerX.Services.MessageBoxes;
 using ServerPickerX.Services.Processes;
@@ -41,6 +42,7 @@ namespace ServerPickerX
             serviceCollection.AddSingleton<ILoggerService, FileLoggerService>();
             serviceCollection.AddSingleton<IMessageBoxService, MessageBoxService>();
             serviceCollection.AddSingleton<IProcessService, ProcessService>();
+            serviceCollection.AddSingleton<ILocalizationService, LocalizationService>();
             serviceCollection.AddSingleton<VersionService>();
             serviceCollection.AddSingleton<JsonSetting>();
             serviceCollection.AddSingleton<HttpClient>();

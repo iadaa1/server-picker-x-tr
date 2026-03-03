@@ -30,8 +30,8 @@ namespace ServerPickerX.Services.MessageBoxes
                     ContentTitle = title,
                     ContentMessage = text,
                     ButtonDefinitions = [
-                            new() { Name = "Ok", },
-                        ],
+                        new() { Name = "Ok", },
+                    ],
                     WindowStartupLocation = Avalonia.Controls.WindowStartupLocation.CenterOwner,
                     ShowInCenter = true,
                     CanResize = false,
@@ -41,15 +41,47 @@ namespace ServerPickerX.Services.MessageBoxes
 
                 var box = MessageBoxManager.GetMessageBoxCustom(customMbsParams);
 
-                await box.ShowWindowDialogAsync(MainWindow.Instance);
+                await box.ShowWindowDialogAsync(MainWindow.Instance!);
             }
             catch (Exception ex)
             {
-await _logger.LogErrorAsync("Failed to show message box", ex.Message);
+                await _logger.LogErrorAsync("Failed to show message box", ex.Message);
             }
         }
 
         public async Task<bool> ShowMessageBoxConfirmationAsync(string title, string text, Icon icon = Icon.Info)
+        {
+            try
+            {
+                var customMbsParams = new MessageBoxCustomParams
+                {
+                    ContentTitle = title,
+                    ContentMessage = text,
+                    ButtonDefinitions = [
+                        new() { Name = "Ok", },
+                        new() { Name = "Cancel", },
+                    ],
+                    WindowStartupLocation = Avalonia.Controls.WindowStartupLocation.CenterOwner,
+                    ShowInCenter = true,
+                    CanResize = false,
+                    Icon = title == "Error" ? Icon.Error : icon,
+                    Topmost = true,
+                };
+
+                var box = MessageBoxManager.GetMessageBoxCustom(customMbsParams);
+
+                var result = await box.ShowWindowDialogAsync(MainWindow.Instance!);
+
+                return result == "Ok";
+            }
+            catch (Exception ex)
+            {
+                await _logger.LogErrorAsync("Failed to show message box confirmation", ex.Message);
+                return false;
+            }
+        }
+
+        public async Task ShowMessageBoxWithLinkAsync(string title, string text, string url, Icon icon = Icon.Info)
         {
             try
             {
@@ -70,39 +102,7 @@ await _logger.LogErrorAsync("Failed to show message box", ex.Message);
 
                 var box = MessageBoxManager.GetMessageBoxCustom(customMbsParams);
 
-                var result = await box.ShowWindowDialogAsync(MainWindow.Instance);
-
-                return result == "Ok";
-            }
-            catch (Exception ex)
-            {
-await _logger.LogErrorAsync("Failed to show message box confirmation", ex.Message);
-                return false;
-            }
-        }
-
-        public async Task ShowMessageBoxWithLinkAsync(string title, string text, string url, Icon icon = Icon.Info)
-{
-            try
-            {
-                var customMbsParams = new MessageBoxCustomParams
-                {
-                    ContentTitle = title,
-                    ContentMessage = text,
-                    ButtonDefinitions = [
-                            new() { Name = "Ok", },
-                            new() { Name = "Cancel", },
-                        ],
-                    WindowStartupLocation = Avalonia.Controls.WindowStartupLocation.CenterOwner,
-                    ShowInCenter = true,
-                    CanResize = false,
-                    Icon = title == "Error" ? Icon.Error : icon,
-                    Topmost = true,
-                };
-
-                var box = MessageBoxManager.GetMessageBoxCustom(customMbsParams);
-
-                var result = await box.ShowWindowDialogAsync(MainWindow.Instance);
+                var result = await box.ShowWindowDialogAsync(MainWindow.Instance!);
 
                 if (result != "Ok")
                 {
@@ -111,11 +111,9 @@ await _logger.LogErrorAsync("Failed to show message box confirmation", ex.Messag
 
                 await _processService.OpenUrl(url);
             }
-catch (Exception ex)
+            catch (Exception ex)
             {
                 await _logger.LogErrorAsync("Failed to show message box with hyperlink", ex.Message);
-
-                await _processService.OpenUrl(url);
             }
         }
     }

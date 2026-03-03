@@ -76,27 +76,31 @@
 
                 <Grid>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <TextBox 
+                        <TextBox
                             Classes="search-textbox"
                             Text="{Binding SearchText}"
                             IsEnabled="{Binding IsOperationAllowed}"
-                            Watermark="Search servers..." 
+                            Watermark="{DynamicResource SearchForServers}"
+                            FontSize="12"
                             VerticalAlignment="Center"
+                            VerticalContentAlignment="Center"
                             Width="144"
                             Margin="8,0,0,0"
                             BorderThickness="1"/>
                         <ComboBox 
-                             x:Name="GameModeComboBox" 
-                             Classes="game-combobox"
-                             SelectionChanged="GameModeComboBox_SelectionChanged"
-                             ItemsSource="{Binding Source={x:Static constants:GameModes.All}}"
-                             IsEnabled="{Binding IsOperationAllowed}"
-                             SelectedIndex="0"
-                             VerticalAlignment="Center"
-                             Width="152"
-                             Margin="8,0,0,0"
-                             BorderThickness="1">
-                         </ComboBox>
+                            x:Name="GameModeComboBox" 
+                            Classes="game-combobox"
+                            SelectionChanged="GameModeComboBox_SelectionChanged"
+                            ItemsSource="{Binding Source={x:Static constants:GameModes.All}}"
+                            IsEnabled="{Binding IsOperationAllowed}"
+                            ToolTip.Tip="{DynamicResource GameModeToolTip}"
+                            ToolTip.ShowDelay="20"
+                            SelectedIndex="0"
+                            VerticalAlignment="Center"
+                            Width="152"
+                            Margin="8,0,0,0"
+                            BorderThickness="1">
+                        </ComboBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button 
@@ -104,41 +108,43 @@
                             Classes="main-btn"
                             Command="{Binding ClusterUnclusterServersAsync}"
                             IsEnabled="{Binding IsOperationAllowed}"
+                            Content="{DynamicResource ClusterServers}"
+                            ToolTip.Tip="{DynamicResource ClusterUnclusterToolTip}"
+                            ToolTip.ShowDelay="20"
                             Click="ClusterUnclusterBtn_Click"
                             VerticalAlignment="Center"
                             Foreground="White"
-                            Margin="0,0,8,0">
-                            Cluster Servers
-                        </Button>
+                            Margin="0,0,8,0"/>
                         <Button 
                             x:Name="RefreshBtn"
                             Classes="main-btn"
                             Command="{Binding PingServers}" 
                             CommandParameter="{Binding ServerModels}"
                             IsEnabled="{Binding IsOperationAllowed}"
+                            Content="{DynamicResource Refresh}"
+                            ToolTip.Tip="{DynamicResource RefreshToolTip}"
+                            ToolTip.ShowDelay="20"
                             VerticalAlignment="Center"
                             Foreground="White"
-                            Margin="0,0,8,0">
-                            Refresh
-                        </Button>
+                            Margin="0,0,8,0"/>
                     </StackPanel>
                 </Grid>
 
                 <Grid Grid.Row="1">
                      <DataGrid
-                           x:Name="ServerList"
-                           ItemsSource="{Binding FilteredServerModels}"
-                           SelectedItem="{Binding SelectedDataGridServerModel}"
-                           SelectionMode="Extended"
-                           IsReadOnly="True"
-                           CanUserReorderColumns="False"
-                           CanUserResizeColumns="False"
-                           CanUserSortColumns="True"
-                           GridLinesVisibility="All"
-                           Foreground="White"
-                           Background="Transparent"
-                           DoubleTapped="DataGrid_DoubleTapped">
-                        <DataGrid.Columns>
+                         x:Name="ServerList"
+                         ItemsSource="{Binding FilteredServerModels}"
+                         SelectedItem="{Binding SelectedDataGridServerModel}"
+                         SelectionMode="Extended"
+                         IsReadOnly="True"
+                         CanUserReorderColumns="False"
+                         CanUserResizeColumns="False"
+                         CanUserSortColumns="True"
+                         GridLinesVisibility="All"
+                         Foreground="White"
+                         Background="Transparent"
+                         DoubleTapped="DataGrid_DoubleTapped">
+                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Flag">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -165,66 +171,80 @@
                 </Grid>
 
                 <Grid Grid.Row="2" Margin="0,0,0,-6">
-                     <StackPanel 
-                        Orientation="Horizontal" 
-                        VerticalAlignment="Center" 
-                        HorizontalAlignment="Left" 
-                        Spacing="6" 
-                        Margin="8,0,0,0">
-						<Button x:Name="BlockAllBtn"
-                            Classes="main-btn"
-                            Command="{Binding BlockAllAsync}"
-                            IsEnabled="{Binding IsOperationAllowed}"
-                            VerticalAlignment="Center">
-                            <TextBlock FontWeight="Bold">
-                                <i:Icon Value="fa-x" FontSize="14" Margin="0,0,0,-3" /> 
-                                Block All
-                            </TextBlock>
-                        </Button>
-						<Button 
-                            x:Name="BlockSelectedBtn" 
-                            Classes="main-btn" 
-                            Command="{Binding BlockSelectedAsync}"
-                            IsEnabled="{Binding IsOperationAllowed}"
-                            CommandParameter="{Binding ElementName=ServerList, Path=SelectedItems}"
-                            VerticalAlignment="Center">
-                            <TextBlock FontWeight="Bold">
-                                <i:Icon Value="fa-x" FontSize="14" Margin="0,0,0,-3" /> 
-                                Block Selected
-                            </TextBlock>
-                        </Button>
-                    </StackPanel>
-                    <StackPanel 
-                        Orientation="Horizontal" 
-                        VerticalAlignment="Center" 
-                        HorizontalAlignment="Right" 
-                        Spacing="6" 
-                        Margin="0,0,8,0">
-						<Button 
-                            x:Name="UnlockAllBtn" 
-                            Classes="main-btn" 
-                            Command="{Binding UnblockAllAsync}"
-                            IsEnabled="{Binding IsOperationAllowed}"
-                            VerticalAlignment="Center">
-                            <TextBlock FontWeight="Bold">
-                                <i:Icon Value="fa-check" FontSize="14" Margin="0,0,0,-3" /> 
-                                Unblock All
-                            </TextBlock>
-                        </Button>
-						<Button 
-                            x:Name="UnblockSelectedBtn" 
-                            Classes="main-btn" 
-                            Command="{Binding UnblockSelectedAsync}"
-                            IsEnabled="{Binding IsOperationAllowed}"
-                            CommandParameter="{Binding ElementName=ServerList, Path=SelectedItems}"
-                            VerticalAlignment="Center">
-                            <TextBlock FontWeight="Bold">
-                                <i:Icon Value="fa-check" FontSize="14" Margin="0,0,0,-3" /> 
-                                Unblock Selected
-                            </TextBlock>
-                        </Button>
-                    </StackPanel>
-                </Grid>
+                      <StackPanel
+                          Orientation="Horizontal" 
+                          VerticalAlignment="Center" 
+                          HorizontalAlignment="Left" 
+                          Spacing="6" 
+                          Margin="8,0,0,0">
+                          <Button x:Name="BlockAllBtn"
+                              Classes="main-btn"
+                              Command="{Binding BlockAllAsync}"
+                              IsEnabled="{Binding IsOperationAllowed}"
+                              VerticalAlignment="Center"
+                              MaxWidth="200"
+                              ToolTip.Tip="{DynamicResource BlockAll}"
+                              ToolTip.ShowDelay="20">
+                              <TextBlock FontWeight="Bold">
+                                  <i:Icon Value="fa-x" FontSize="14" Margin="0,0,0,-3" /> 
+                                  <TextBlock Text="{DynamicResource BlockAll}" Margin="0,0,0,-4"/>
+                              </TextBlock>
+                          </Button>
+                          <Button 
+                              x:Name="BlockSelectedBtn" 
+                              Classes="main-btn" 
+                              Command="{Binding BlockSelectedAsync}"
+                              IsEnabled="{Binding IsOperationAllowed}"
+                              CommandParameter="{Binding ElementName=ServerList, Path=SelectedItems}"
+                              VerticalAlignment="Center"
+                              MaxWidth="200"
+                              ToolTip.Tip="{DynamicResource BlockSelected}"
+                              ToolTip.ShowDelay="20">
+                              <TextBlock FontWeight="Bold">
+                                  <i:Icon Value="fa-x" FontSize="14" Margin="0,0,0,-3" /> 
+                                  <TextBlock Text="{DynamicResource BlockSelected}" Margin="0,0,0,-4"/>
+                              </TextBlock>
+                          </Button>
+                      </StackPanel>
+                      <StackPanel 
+                          Orientation="Horizontal" 
+                          VerticalAlignment="Center" 
+                          HorizontalAlignment="Right" 
+                          Spacing="6" 
+                          Margin="0,0,8,0">
+                          <Button 
+                              x:Name="UnlockAllBtn" 
+                              Classes="main-btn" 
+                              Command="{Binding UnblockAllAsync}"
+                              IsEnabled="{Binding IsOperationAllowed}"
+                              VerticalAlignment="Center"
+                              MinWidth="100"
+                              MaxWidth="200"
+                              ToolTip.Tip="{DynamicResource UnblockAll}"
+                              ToolTip.ShowDelay="20">
+                              <TextBlock FontWeight="Bold">
+                                  <i:Icon Value="fa-check" FontSize="14" Margin="0,0,0,-3" /> 
+                                  <TextBlock Text="{DynamicResource UnblockAll}" Margin="0,0,0,-4"/>
+                              </TextBlock>
+                          </Button>
+                          <Button 
+                              x:Name="UnblockSelectedBtn" 
+                              Classes="main-btn" 
+                              Command="{Binding UnblockSelectedAsync}"
+                              IsEnabled="{Binding IsOperationAllowed}"
+                              CommandParameter="{Binding ElementName=ServerList, Path=SelectedItems}"
+                              VerticalAlignment="Center"
+                              MinWidth="100"
+                              MaxWidth="200"
+                              ToolTip.Tip="{DynamicResource UnblockSelected}"
+                              ToolTip.ShowDelay="20">
+                              <TextBlock FontWeight="Bold">
+                                  <i:Icon Value="fa-check" FontSize="14" Margin="0,0,0,-3" /> 
+                                  <TextBlock Text="{DynamicResource UnblockSelected}" Margin="0,0,0,-4"/>
+                              </TextBlock>
+                          </Button>
+                      </StackPanel>
+                  </Grid>
 
                 <Grid Grid.Row="3">
                     <userControls:FooterButtons />

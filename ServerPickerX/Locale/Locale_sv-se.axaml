@@ -1,0 +1,20 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:String x:Key="LanguageCode">sv-se</x:String>
+  <x:String x:Key="ClusterServers">Gruppera servrar</x:String>
+  <x:String x:Key="UnclusterServers">Avgruppera servrar</x:String>
+  <x:String x:Key="Refresh">Uppdatera</x:String>
+  <x:String x:Key="SearchForServers">Sök efter servrar...</x:String>
+  <x:String x:Key="BlockAll">Blockera alla</x:String>
+  <x:String x:Key="BlockSelected">Blockera valda</x:String>
+  <x:String x:Key="UnblockAll">Avblockera alla</x:String>
+  <x:String x:Key="UnblockSelected">Avblockera valda</x:String>
+  <x:String x:Key="CheckForNewVersion">Kontrollera efter ny version vid start</x:String>
+  <x:String x:Key="ResetFirewall">Återställ brandvägg</x:String>
+  <x:String x:Key="GameModeToolTip">Välj spelläge</x:String>
+  <x:String x:Key="ClusterUnclusterToolTip">Gruppera eller avgruppera servrar</x:String>
+  <x:String x:Key="RefreshToolTip">Uppdatera ping för alla servrar</x:String>
+  <x:String x:Key="UnblockAllConflict">Detta åtgärder kommer att avblockera alla servrar först för att undvika brandvägskonflikter.</x:String>
+  <x:String x:Key="LanguageComboBoxToolTip">Välj språk</x:String>
+  <x:String x:Key="ResetFirewallToolTip">Återställ brandväggsregler</x:String>
+</ResourceDictionary>
