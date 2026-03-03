@@ -136,7 +136,7 @@ namespace ServerPickerX.Tests.ViewModels
             await _vm.LoadServersAsync();
             _vm.PingServers(_vm.ServerModels);
 
-            Thread.Sleep(70); // Pinging is done in parallel operation and is not awaited
+            await Task.Delay(70); // Pinging is done in parallel operation and is not awaited
 
             // Assert
             Assert.NotEmpty(_vm.ServerModels);
