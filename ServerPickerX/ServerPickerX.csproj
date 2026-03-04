@@ -20,20 +20,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <AvaloniaResource Include="Assets\**" />
-  </ItemGroup>
-
-  <ItemGroup>
+	<AvaloniaResource Include="Assets\**" />
     <AvaloniaResource Include="Styles\**" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <AvaloniaResource Include="Locale\**" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <AvaloniaXaml Remove="Locale\Locale_es-ES.axaml" />
-    <AvaloniaXaml Remove="Locale\Locale_zh-CN.axaml" />
+	<AvaloniaResource Include="Locales\**" />
   </ItemGroup>
 
   <ItemGroup>

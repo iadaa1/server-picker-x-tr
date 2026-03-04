@@ -33,7 +33,7 @@ namespace ServerPickerX.Services.Localizations
                 }
             }
 
-            Uri resourceUri = ResourceHelper.CreateResourceUriFromPath("/Locale/Locale_" + language + ".axaml");
+            Uri resourceUri = ResourceHelper.CreateResourceUriFromPath("/Locales/Locale_" + language + ".axaml");
             ResourceInclude localeResource = new(resourceUri) { Source = resourceUri };
 
             _currentLocaleResource = localeResource;

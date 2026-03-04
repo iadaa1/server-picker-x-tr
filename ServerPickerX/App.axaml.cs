@@ -38,14 +38,16 @@ namespace ServerPickerX
 
             var serviceCollection = new ServiceCollection();
 
+            // Register singleton services
             serviceCollection.AddSingleton<ILoggerService, FileLoggerService>();
             serviceCollection.AddSingleton<IMessageBoxService, MessageBoxService>();
             serviceCollection.AddSingleton<IProcessService, ProcessService>();
             serviceCollection.AddSingleton<ILocalizationService, LocalizationService>();
-            serviceCollection.AddSingleton<VersionService>();
+            serviceCollection.AddSingleton<IVersionService, VersionService>();
             serviceCollection.AddSingleton<JsonSetting>();
             serviceCollection.AddSingleton<HttpClient>();
 
+            // Register concrete services and contionally use these services inside parent interface service resolver
             serviceCollection.AddTransient<CS2ServerDataService>();
             serviceCollection.AddTransient<DeadLockServerDataService>();
             serviceCollection.AddTransient<IServerDataService>(serviceProvider =>
@@ -59,7 +61,6 @@ namespace ServerPickerX
                     _ => throw new NotSupportedException($"Unsupported game mode: {jsonSetting.game_mode}")
                 };
             });
-
             serviceCollection.AddTransient<WindowsFirewallService>();
             serviceCollection.AddTransient<LinuxFirewallService>();
             serviceCollection.AddTransient<ISystemFirewallService>(serviceProvider =>
@@ -76,6 +77,7 @@ namespace ServerPickerX
                 throw new PlatformNotSupportedException("Firewall services are only available for Windows and Linux");
             });
 
+            // Register view model services
             serviceCollection.AddTransient<MainWindowViewModel>();
             serviceCollection.AddTransient<SettingsWindowViewModel>();
 
