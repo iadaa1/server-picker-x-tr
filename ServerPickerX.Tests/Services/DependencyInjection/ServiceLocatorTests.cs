@@ -1,4 +1,5 @@
 using Moq;
+using ServerPickerX.Services.MessageBoxes;
 using System.Reflection;
 using Xunit;
 
@@ -24,7 +25,6 @@ namespace ServerPickerX.Services.DependencyInjection.Tests
 
             ServiceLocator.Initialize(mockProvider.Object);
 
-
             // Act & Assert
             var serviceProvider = ReflectGetStaticField(typeof(ServiceLocator), "_provider");
 
@@ -37,14 +37,14 @@ namespace ServerPickerX.Services.DependencyInjection.Tests
         {
             // Arrange
             var mockProvider = new Mock<IServiceProvider>();
-            var mockService = new Mock<IServiceProvider>();
+            var mockService = new Mock<IMessageBoxService>();
 
-            mockProvider.Setup(p => p.GetService(typeof(IServiceProvider))).Returns(mockService.Object);
+            mockProvider.Setup(p => p.GetService(typeof(IMessageBoxService))).Returns(mockService.Object);
 
             ServiceLocator.Initialize(mockProvider.Object);
 
             // Act
-            var result = ServiceLocator.GetService<IServiceProvider>();
+            var result = ServiceLocator.GetService<IMessageBoxService>();
 
             // Assert
             Assert.NotNull(result);
@@ -58,7 +58,7 @@ namespace ServerPickerX.Services.DependencyInjection.Tests
             ServiceLocator.Initialize(null);
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => ServiceLocator.GetService<IServiceProvider>());
+            Assert.Throws<InvalidOperationException>(() => ServiceLocator.GetService<IMessageBoxService>());
         }
 
         [Fact]
@@ -66,12 +66,14 @@ namespace ServerPickerX.Services.DependencyInjection.Tests
         {
             // Arrange
             var mockProvider = new Mock<IServiceProvider>();
-            var mockService = new Mock<IServiceProvider>();
+            var mockService = new Mock<IMessageBoxService>();
+            
             mockProvider.Setup(p => p.GetService(typeof(IServiceProvider))).Returns(mockService.Object);
+            
             ServiceLocator.Initialize(mockProvider.Object);
 
             // Act
-            var result = ServiceLocator.GetRequiredService<IServiceProvider>();
+            var result = ServiceLocator.GetRequiredService<IMessageBoxService>();
 
             // Assert
             Assert.NotNull(result);
@@ -85,7 +87,7 @@ namespace ServerPickerX.Services.DependencyInjection.Tests
             ServiceLocator.Initialize(null);
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => ServiceLocator.GetRequiredService<IServiceProvider>());
+            Assert.Throws<InvalidOperationException>(() => ServiceLocator.GetRequiredService<IMessageBoxService>());
         }
     }
 }
