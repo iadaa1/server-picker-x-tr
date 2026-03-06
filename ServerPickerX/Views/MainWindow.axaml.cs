@@ -51,7 +51,7 @@ namespace ServerPickerX.Views
 
             _jsonSetting = ServiceLocator.GetRequiredService<JsonSetting>();
             _messageBoxService = ServiceLocator.GetRequiredService<IMessageBoxService>();
-            _versionService = ServiceLocator.GetRequiredService<VersionService>();
+            _versionService = ServiceLocator.GetRequiredService<IVersionService>();
             _localizationService = ServiceLocator.GetRequiredService<ILocalizationService>();
         }
 

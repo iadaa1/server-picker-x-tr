@@ -23,9 +23,6 @@ namespace ServerPickerX
 {
     public partial class App : Application
     {
-        // Singleton service container, access services across the app on execution lifetime
-        public static IServiceProvider ServiceProvider { get; private set; }
-
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
@@ -81,9 +78,7 @@ namespace ServerPickerX
             serviceCollection.AddTransient<MainWindowViewModel>();
             serviceCollection.AddTransient<SettingsWindowViewModel>();
 
-            ServiceProvider = serviceCollection.BuildServiceProvider();
-
-            ServiceLocator.Initialize(ServiceProvider);
+            ServiceLocator.Initialize(serviceCollection.BuildServiceProvider());
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
