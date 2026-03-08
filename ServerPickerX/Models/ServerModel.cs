@@ -50,7 +50,7 @@ namespace ServerPickerX.Models
                 }
             }
 
-            // if pinging status remains after pinging all server relay addresses then its blocked or unreachable
+            // if pinging status remains depite ping all relays then its blocked or unreachable
             if (Ping == "Pinging server")
             {
                 Ping = "";

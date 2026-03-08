@@ -1,0 +1,20 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:String x:Key="LanguageCode">pl-pl</x:String>
+  <x:String x:Key="ClusterServers">Serwery klastrowe</x:String>
+  <x:String x:Key="UnclusterServers">Serwery Uncluster</x:String>
+  <x:String x:Key="Refresh">Odświeżać</x:String>
+  <x:String x:Key="SearchForServers">Wyszukaj serwery...</x:String>
+  <x:String x:Key="BlockAll">Zablokuj wszystko</x:String>
+  <x:String x:Key="BlockSelected">Blok wybrany</x:String>
+  <x:String x:Key="UnblockAll">Odblokuj wszystko</x:String>
+  <x:String x:Key="UnblockSelected">Odblokuj wybrane</x:String>
+  <x:String x:Key="CheckForNewVersion">Sprawdź nową wersję podczas uruchamiania</x:String>
+  <x:String x:Key="ResetFirewall">Zresetuj zaporę sieciową</x:String>
+  <x:String x:Key="GameModeToolTip">Wybierz Tryb gry</x:String>
+  <x:String x:Key="ClusterUnclusterToolTip">Grupowanie lub rozgrupowywanie serwerów</x:String>
+  <x:String x:Key="RefreshToolTip">Odśwież ping wszystkich serwerów</x:String>
+  <x:String x:Key="UnblockAllConflict">Ta czynność odblokuje najpierw wszystkie serwery, aby zapobiec konfliktom z zaporą sieciową.</x:String>
+  <x:String x:Key="LanguageComboBoxToolTip">Wybierz język</x:String>
+  <x:String x:Key="ResetFirewallToolTip">Zresetuj reguły zapory sieciowej</x:String>
+</ResourceDictionary>
