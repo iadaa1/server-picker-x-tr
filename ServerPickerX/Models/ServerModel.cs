@@ -1,8 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.NetworkInformation;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace ServerPickerX.Models
 {
@@ -24,9 +25,22 @@ namespace ServerPickerX.Models
 
         public List<RelayModel> RelayModels { get; set; } = [];
 
+        private CancellationTokenSource? _cancelTokenSource;
+
         public async void PingServer()
         {
-            using Ping ping = new();
+            // If there's an ongoing ping operation then cancel it through token signals
+            // Linux ICMP behaves differently. Executing too many ping operations may result in a timeout
+            if (this._cancelTokenSource != null)
+            {
+                this._cancelTokenSource.Cancel();
+                
+            }
+
+            this._cancelTokenSource = new CancellationTokenSource();
+            var cancelToken = this._cancelTokenSource.Token;
+
+            using var ping = new Ping();
 
             Ping = "Pinging server";
 
@@ -34,7 +48,13 @@ namespace ServerPickerX.Models
             {
                 try
                 {
-                    var res = await ping.SendPingAsync(relay.IPv4, timeout: 750);
+                    // Cancellable async operation
+                    var res = await ping.SendPingAsync(
+                        address: IPAddress.Parse(relay.IPv4), 
+                        timeout: TimeSpan.FromMilliseconds(800), 
+                        options: new PingOptions(), 
+                        cancellationToken: cancelToken
+                        );
 
                     if (res.Status == IPStatus.Success && res.RoundtripTime >= 0)
                     {
@@ -44,9 +64,9 @@ namespace ServerPickerX.Models
                         break;
                     }
                 }
-                catch (Exception ex) when (ex is PingException || ex is OperationCanceledException)
+                catch (Exception ex) when (ex is PingException or OperationCanceledException)
                 {
-                    continue;
+                    break;
                 }
             }
 
