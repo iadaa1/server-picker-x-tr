@@ -20,4 +20,4 @@ jobs:
       - name: Build App
         run: dotnet build ServerPickerX.slnx --no-restore
       - name: Run unit tests (XUnit)
-          run: dotnet test ServerPickerX.Tests.slnx --no-build
+        run: dotnet test ServerPickerX.Tests.slnx --no-build
