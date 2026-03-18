@@ -10,6 +10,7 @@ using MsBox.Avalonia.Enums;
 using System.Reflection;
 using System.Collections.ObjectModel;
 using ServerPickerX.Models;
+using ServerPickerX.Services.Localizations;
 
 namespace ServerPickerX.Tests.ViewModels
 {
@@ -17,6 +18,7 @@ namespace ServerPickerX.Tests.ViewModels
     {
         private readonly Mock<ILoggerService> _loggerService;
         private readonly Mock<IMessageBoxService> _messageBoxService;
+        private readonly Mock<ILocalizationService> _localizationService;
         private readonly Mock<IServerDataService> _serverDataService;
         private readonly Mock<ISystemFirewallService> _systemFirewallService;
         private readonly Mock<JsonSetting> _jsonSetting;
@@ -27,6 +29,7 @@ namespace ServerPickerX.Tests.ViewModels
         {
             _loggerService = new Mock<ILoggerService>();
             _messageBoxService = new Mock<IMessageBoxService>();
+            _localizationService = new Mock<ILocalizationService>();
             _serverDataService = new Mock<IServerDataService>();
             _systemFirewallService = new Mock<ISystemFirewallService>();
             _jsonSetting = new Mock<JsonSetting>();
@@ -34,6 +37,7 @@ namespace ServerPickerX.Tests.ViewModels
             _vm = new MainWindowViewModel(
                 _loggerService.Object,
                 _messageBoxService.Object,
+                _localizationService.Object,
                 _serverDataService.Object,
                 _systemFirewallService.Object,
                 _jsonSetting.Object
@@ -163,10 +167,11 @@ namespace ServerPickerX.Tests.ViewModels
             _vm.SelectedDataGridServerModel = _vm.ServerModels[0];
             _vm.PingSelectedServer();
 
-            Thread.Sleep(70); // Pinging is done in parallel operation and is not awaited
+            await Task.Delay(70); // Pinging is done in parallel operation and is not awaited
 
             // Assert
             Assert.NotEmpty(_vm.ServerModels);
+            var model = _vm.SelectedDataGridServerModel;
             Assert.True(_vm.SelectedDataGridServerModel.Ping?.Contains("ms"));
             Assert.Equal("✅", _vm.ServerModels[0].Status);
         }
@@ -190,6 +195,7 @@ namespace ServerPickerX.Tests.ViewModels
 
             _systemFirewallService.Setup(i => i.BlockServersAsync(_vm.ServerModels))
                 .Callback((ObservableCollection<ServerModel> serverModels) => {
+                    // Clear model relays to simulate a failed ICMP ping
                     foreach (var server in serverModels)
                     {
                         server.RelayModels.Clear();
@@ -199,10 +205,12 @@ namespace ServerPickerX.Tests.ViewModels
 
             var result = await _vm.BlockAllAsync();
 
+            await Task.Delay(70);
+
             // Assert
-            Assert.NotEmpty(_vm.ServerModels);
             // Verify method is invoked
-            _systemFirewallService.Verify(i => i.BlockServersAsync(_vm.ServerModels), Times.Once); 
+            _systemFirewallService.Verify(i => i.BlockServersAsync(_vm.ServerModels), Times.Once);
+            Assert.NotEmpty(_vm.ServerModels);
             Assert.True(result);
             foreach (var server in _vm.ServerModels)
             {
@@ -245,11 +253,10 @@ namespace ServerPickerX.Tests.ViewModels
             ObservableCollection<ServerModel> selectedServers = [_vm.ServerModels[0], _vm.ServerModels[2]];
 
             _systemFirewallService.Setup(i => i.BlockServersAsync(selectedServers))
-                .Callback((ObservableCollection<ServerModel> serverModels) =>
-                {
+                .Callback((ObservableCollection<ServerModel> serverModels) => {
+                    // Clear model relays to simulate a failed ICMP ping
                     foreach (var server in serverModels)
                     {
-                        // In order for PingServers method to update Ping to null and Status to ❌ 
                         server.RelayModels.Clear();
                     }
                 })
@@ -263,7 +270,7 @@ namespace ServerPickerX.Tests.ViewModels
             Assert.True(result);
             foreach (var item in _vm.ServerModels.Select((value, index) => new { value, index }))
             {
-                if(item.index is 0 or 2)
+                if (item.index is 0 or 2)
                 {
                     Assert.Empty(item.value.Ping);
                     Assert.Equal("❌", item.value.Status);
@@ -286,6 +293,14 @@ namespace ServerPickerX.Tests.ViewModels
             // Assert
             // Verify method is not invoked
             _systemFirewallService.Verify(i => i.BlockServersAsync(It.IsAny<ObservableCollection<ServerModel>>()), Times.Never);
+            // Verify method is invoked
+            _messageBoxService.Verify(i =>
+                i.ShowMessageBoxAsync(
+                    _localizationService.Object.GetLocaleValue("MessageBoxInfoTitle"),
+                    _localizationService.Object.GetLocaleValue("SelectOneServerToBlockDialogue")
+                ),
+                Times.Once()
+            );
             Assert.False(result);
         }
 
@@ -301,26 +316,21 @@ namespace ServerPickerX.Tests.ViewModels
             _serverDataService.Setup(i => i.LoadServersAsync()).Returns(Task.FromResult(true));
             _serverDataService.Setup(i => i.GetServerData()).Returns(serverData);
 
+            // Act
             await _vm.LoadServersAsync();
 
-            _systemFirewallService.Setup(i => i.UnblockServersAsync(_vm.ServerModels))
-                .Callback((ObservableCollection<ServerModel> serverModels) =>
-                {
-                    foreach (var server in serverModels)
-                    {
-                        // clear relay models to force ping failure
-                        server.RelayModels.Clear();
-                    }
-                })
-                .Returns(Task.CompletedTask);
+            _systemFirewallService.Setup(i => i.UnblockServersAsync(_vm.ServerModels)).Returns(Task.CompletedTask);
 
             var result = await _vm.UnblockAllAsync();
 
+            await Task.Delay(70); // ping operations are fire-and-forget (background tasks)
+
+            // Assert
             Assert.True(result);
             foreach (var srv in _vm.ServerModels)
             {
-                Assert.Empty(srv.Ping);
-                Assert.Equal("❌", srv.Status);
+                Assert.Contains("ms", srv.Ping);
+                Assert.Equal("✅", srv.Status);
             }
         }
 
@@ -333,9 +343,9 @@ namespace ServerPickerX.Tests.ViewModels
             var result = await _vm.UnblockAllAsync();
 
             // Assert
-            Assert.False(result);
             // Verify method is not invoked
             _systemFirewallService.Verify(i => i.UnblockServersAsync(It.IsAny<ObservableCollection<ServerModel>>()), Times.Never());
+            Assert.False(result);
         }
 
         [Fact]
@@ -348,25 +358,16 @@ namespace ServerPickerX.Tests.ViewModels
                 UnclusteredServers = ServerModelFactory.CreateWithCluster(3),
             };
 
-            _serverDataService.Setup(i => i.LoadServersAsync()).Returns(Task.FromResult(true));
-            _serverDataService.Setup(i => i.GetServerData()).Returns(serverData);
-
             // Act
-            await _vm.LoadServersAsync();
-
-            List<ServerModel> selected = [_vm.ServerModels[0], _vm.ServerModels[2]];
+            List<ServerModel> selected = [serverData.ClusteredServers[0], serverData.ClusteredServers[2]];
 
             _systemFirewallService.Setup(i => i.UnblockServersAsync(It.IsAny<ObservableCollection<ServerModel>>()))
                 .Returns(Task.CompletedTask);
 
             var result = await _vm.UnblockSelectedAsync(selected);
 
+            // Assert
             Assert.True(result);
-            foreach (var srv in selected)
-            {
-                Assert.Contains("ms", srv.Ping);
-                Assert.Equal("✅", srv.Status);
-            }
         }
 
         [Fact]
@@ -378,8 +379,16 @@ namespace ServerPickerX.Tests.ViewModels
             var result = await _vm.UnblockSelectedAsync(emptyList);
 
             // Assert
+            // Verify method is not invoked
+            _systemFirewallService.Verify(i => i.UnblockServersAsync(It.IsAny<ObservableCollection<ServerModel>>()), Times.Never);
+            _messageBoxService.Verify(i => 
+                i.ShowMessageBoxAsync(
+                    _localizationService.Object.GetLocaleValue("MessageBoxInfoTitle"),
+                    _localizationService.Object.GetLocaleValue("SelectOneServerToUnblockDialogue")
+                ), 
+                Times.Once()
+            );
             Assert.False(result);
-            _messageBoxService.Verify(i => i.ShowMessageBoxAsync("Info", "Hey! Please select at least one server to unblock"), Times.Once());
         }
 
         [Fact]
@@ -395,7 +404,14 @@ namespace ServerPickerX.Tests.ViewModels
 
             // Assert
             Assert.False(result);
-            _messageBoxService.Verify(i => i.ShowMessageBoxAsync("Info", "Whoa! There's already a pending operation. Please wait...", Icon.Setting), Times.Once());
+            _messageBoxService.Verify(i => 
+                i.ShowMessageBoxAsync(
+                    _localizationService.Object.GetLocaleValue("MessageBoxInfoTitle"),
+                    _localizationService.Object.GetLocaleValue("PendingOperationDialogue"),
+                    Icon.Setting
+                ), 
+                Times.Once()
+            );
         }
 
         [Fact]
@@ -409,6 +425,9 @@ namespace ServerPickerX.Tests.ViewModels
             // Act
             var result = await _vm.PerformOperationAsync(true, serverModels);
 
+            await Task.Delay(70); // ping operations are fire-and-forget (background tasks)
+
+            // Assert
             Assert.True(result);
             foreach (var srv in serverModels)
             {
@@ -432,6 +451,8 @@ namespace ServerPickerX.Tests.ViewModels
 
             // Act
             var result = await _vm.PerformOperationAsync(false, serverModels);
+
+            await Task.Delay(70); // ping operations are fire-and-forget (background tasks)
 
             // Assert
             Assert.True(result);

@@ -68,7 +68,7 @@ namespace ServerPickerX.Services.DependencyInjection.Tests
             var mockProvider = new Mock<IServiceProvider>();
             var mockService = new Mock<IMessageBoxService>();
             
-            mockProvider.Setup(p => p.GetService(typeof(IServiceProvider))).Returns(mockService.Object);
+            mockProvider.Setup(p => p.GetService(typeof(IMessageBoxService))).Returns(mockService.Object);
             
             ServiceLocator.Initialize(mockProvider.Object);
 
